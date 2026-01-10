@@ -8,10 +8,23 @@
 </head>
 
 <body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-box">
+      <h2>Welcome to DuelKings</h2>
+      <p>Enter a username to continue</p>
+      <input id="login-username" type="text" placeholder="Your username" />
+      <button id="login-btn" class="primary-btn">Enter</button>
+    </div>
+  </div>
+
   <!-- HEADER -->
   <header class="dk-header">
     <div class="dk-header-left">
-      <div class="dk-logo">DuelKings</div>
+      <div class="dk-logo">
+        <img src="assets/duelkings-logo.svg" alt="DuelKings" />
+      </div>
 
       <nav class="dk-nav">
         <button class="nav-tab active" data-view="pools">Pools</button>
@@ -20,7 +33,8 @@
     </div>
 
     <div class="dk-header-right">
-      <span class="dk-tagline">Free to play. Bragging rights only.</span>
+      <span id="current-user" class="current-user"></span>
+      <button id="theme-toggle" class="dk-theme-toggle">Dark mode</button>
     </div>
   </header>
 
@@ -29,8 +43,17 @@
 
     <!-- POOLS VIEW -->
     <section id="pools-view" class="view active">
+
       <div class="pool-header">
-        <h1 id="pool-title">Loading pool…</h1>
+        <div class="pool-header-top">
+          <h1 id="pool-title">Loading pool…</h1>
+
+          <div class="pool-controls">
+            <select id="sport-filter"></select>
+            <select id="pool-select"></select>
+          </div>
+        </div>
+
         <div id="pool-meta" class="pool-meta"></div>
       </div>
 
@@ -40,7 +63,9 @@
 
       <div class="picks-footer">
         <button id="save-picks-btn" class="primary-btn">Save my picks (this device)</button>
+        <button id="submit-picks-btn" class="primary-btn">Submit Picks</button>
         <div id="save-status" class="save-status"></div>
+        <div id="submit-output" class="save-status"></div>
       </div>
     </section>
 
