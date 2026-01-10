@@ -5,39 +5,34 @@
       "id": "nfl-week1",
       "sport": "NFL",
       "label": "NFL Week 1 Main Pool",
+      "status": "open",
       "deadline": "2026-09-10T17:00:00Z",
-      "games": [
-        {
-          "id": "buf-nyj",
-          "startTime": "2026-09-10T17:00:00Z",
-          "homeTeam": "New York Jets",
-          "awayTeam": "Buffalo Bills",
-          "spread": {
-            "home": -3.5,
-            "away": 3.5
-          },
-          "moneyline": {
-            "home": -150,
-            "away": 130
-          },
-          "total": 44.5
-        },
-        {
-          "id": "dal-phi",
-          "startTime": "2026-09-10T20:25:00Z",
-          "homeTeam": "Philadelphia Eagles",
-          "awayTeam": "Dallas Cowboys",
-          "spread": {
-            "home": -2.5,
-            "away": 2.5
-          },
-          "moneyline": {
-            "home": -135,
-            "away": 115
-          },
-          "total": 47.0
-        }
-      ]
+      "games": [ ... ]
+    },
+    {
+      "id": "nhl-saturday",
+      "sport": "NHL",
+      "label": "NHL Saturday Night Picks",
+      "status": "open",
+      "deadline": "2026-10-17T23:00:00Z",
+      "games": [ ... ]
+    },
+    {
+      "id": "nba-friday",
+      "sport": "NBA",
+      "label": "NBA Friday Night Slate",
+      "status": "open",
+      "deadline": "2026-11-06T00:00:00Z",
+      "games": [ ... ]
+    },
+    {
+      "id": "mlb-sunday",
+      "sport": "MLB",
+      "label": "MLB Sunday Picks",
+      "status": "open",
+      "deadline": "2026-07-12T17:00:00Z",
+      "games": [ ... ]
     }
   ]
 }
+
