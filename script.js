@@ -1,286 +1,326 @@
-const POOLS_URL = "./data/pools.json";
-const RESULTS_URL = "./data/results.json";
-const ENTRIES_URL = "./data/entries.json";
-const STORAGE_KEY = "duelkings_picks";
+/* --------------------------------------------------
+   THEME VARIABLES
+-------------------------------------------------- */
 
-let currentPool = null;
-let userPicks = {};
-
-document.addEventListener("DOMContentLoaded", () => {
-  setupNav();
-  loadLocalPicks();
-  loadPools();
-  setupSaveButton();
-});
-
-/* -----------------------------
-   NAVIGATION
------------------------------- */
-
-function setupNav() {
-  const tabs = document.querySelectorAll(".nav-tab");
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-
-      const view = tab.dataset.view;
-      document.querySelectorAll(".view").forEach(v => {
-        v.classList.toggle("active", v.id === `${view}-view`);
-      });
-
-      if (view === "leaderboard") {
-        loadLeaderboard();
-      }
-    });
-  });
+:root {
+  --dk-radius: 12px;
+  --dk-spacing: 16px;
+  --dk-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* -----------------------------
-   LOCAL STORAGE
------------------------------- */
+/* Light theme (default) */
+:root,
+:root[data-theme="light"] {
+  --dk-bg: #f3f4f6;
+  --dk-surface: #ffffff;
+  --dk-accent: #2563eb;
+  --dk-accent-soft: #e0ecff;
+  --dk-border: #d1d5db;
+  --dk-text-main: #111827;
+  --dk-text-muted: #6b7280;
+}
 
-function loadLocalPicks() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) userPicks = JSON.parse(raw);
-  } catch (e) {
-    console.error("Failed to load picks", e);
+/* Dark theme */
+:root[data-theme="dark"] {
+  --dk-bg: #020617;
+  --dk-surface: #0b1120;
+  --dk-accent: #22c55e;
+  --dk-accent-soft: #064e3b;
+  --dk-border: #1f2937;
+  --dk-text-main: #e5e7eb;
+  --dk-text-muted: #9ca3af;
+}
+
+/* --------------------------------------------------
+   GLOBAL
+-------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--dk-font);
+  background: var(--dk-bg);
+  color: var(--dk-text-main);
+}
+
+/* --------------------------------------------------
+   HEADER
+-------------------------------------------------- */
+
+.dk-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #020617;
+  color: #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dk-logo img {
+  height: 32px;
+}
+
+.dk-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dk-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-tab {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.nav-tab.active {
+  background: rgba(37, 99, 235, 0.2);
+  color: #e5e7eb;
+}
+
+.dk-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.dk-theme-toggle {
+  font-size: 12px;
+  color: #9ca3af;
+  cursor: pointer;
+  border: 1px solid #374151;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: transparent;
+}
+
+/* --------------------------------------------------
+   MAIN LAYOUT
+-------------------------------------------------- */
+
+.dk-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+/* --------------------------------------------------
+   POOL HEADER
+-------------------------------------------------- */
+
+.pool-header {
+  margin-bottom: 16px;
+}
+
+.pool-header h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.pool-meta {
+  font-size: 13px;
+  color: var(--dk-text-muted);
+}
+
+.pool-header-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pool-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.pool-controls select {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+@media (min-width: 768px) {
+  .pool-header-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
-function saveLocalPicks() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(userPicks));
-  } catch (e) {
-    console.error("Failed to save picks", e);
-  }
+/* --------------------------------------------------
+   MATCHUP CARDS
+-------------------------------------------------- */
+
+.games-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* -----------------------------
-   LOAD POOLS
------------------------------- */
-
-async function loadPools() {
-  try {
-    const res = await fetch(POOLS_URL);
-    const data = await res.json();
-    const pool = data.pools.find(p => p.id === data.currentPoolId);
-    currentPool = pool;
-    renderPool(pool);
-  } catch (e) {
-    console.error("Failed to load pools", e);
-  }
+.matchup-card {
+  background: var(--dk-surface);
+  border-radius: var(--dk-radius);
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--dk-border);
 }
 
-/* -----------------------------
-   RENDER POOL + MATCHUPS
------------------------------- */
-
-function renderPool(pool) {
-  const titleEl = document.getElementById("pool-title");
-  const metaEl = document.getElementById("pool-meta");
-  const gamesContainer = document.getElementById("games-container");
-
-  titleEl.textContent = pool.label;
-  metaEl.textContent = `${pool.sport} • Deadline: ${new Date(pool.deadline).toLocaleString()}`;
-
-  gamesContainer.innerHTML = "";
-
-  const poolPicks = userPicks[pool.id] || {};
-
-  pool.games.forEach(game => {
-    const card = document.createElement("div");
-    card.className = "matchup-card";
-    card.dataset.gameId = game.id;
-
-    const gamePicks = poolPicks[game.id] || {};
-
-    card.innerHTML = `
-      <div class="matchup-header">
-        <span>${new Date(game.startTime).toLocaleString()}</span>
-        <span>${pool.sport}</span>
-      </div>
-
-      <div class="teams">
-        <div class="team">
-          <span class="team-name">${game.awayTeam}</span>
-          <span class="team-tag">Away</span>
-        </div>
-        <div class="team">
-          <span class="team-name">${game.homeTeam}</span>
-          <span class="team-tag">Home</span>
-        </div>
-      </div>
-
-      <div class="odds-row">
-        <button class="odds-btn" data-type="spread" data-choice="away">
-          <span class="odds-btn-label">${game.awayTeam} spread</span>
-          <span class="odds-btn-value">${game.spread.away}</span>
-        </button>
-        <button class="odds-btn" data-type="moneyline" data-choice="away">
-          <span class="odds-btn-label">${game.awayTeam} ML</span>
-          <span class="odds-btn-value">${game.moneyline.away}</span>
-        </button>
-        <button class="odds-btn" data-type="total" data-choice="over">
-          <span class="odds-btn-label">Over</span>
-          <span class="odds-btn-value">${game.total}</span>
-        </button>
-      </div>
-
-      <div class="odds-row" style="margin-top:6px;">
-        <button class="odds-btn" data-type="spread" data-choice="home">
-          <span class="odds-btn-label">${game.homeTeam} spread</span>
-          <span class="odds-btn-value">${game.spread.home}</span>
-        </button>
-        <button class="odds-btn" data-type="moneyline" data-choice="home">
-          <span class="odds-btn-label">${game.homeTeam} ML</span>
-          <span class="odds-btn-value">${game.moneyline.home}</span>
-        </button>
-        <button class="odds-btn" data-type="total" data-choice="under">
-          <span class="odds-btn-label">Under</span>
-          <span class="odds-btn-value">${game.total}</span>
-        </button>
-      </div>
-    `;
-
-    applyExistingSelections(card, gamePicks);
-    attachSelectionHandlers(card, pool.id, game.id);
-
-    gamesContainer.appendChild(card);
-  });
+.matchup-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--dk-text-muted);
+  margin-bottom: 8px;
 }
 
-function applyExistingSelections(card, gamePicks) {
-  Object.entries(gamePicks).forEach(([type, choice]) => {
-    const btn = card.querySelector(`.odds-btn[data-type="${type}"][data-choice="${choice}"]`);
-    if (btn) btn.classList.add("selected");
-  });
+.teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
 }
 
-function attachSelectionHandlers(card, poolId, gameId) {
-  const buttons = card.querySelectorAll(".odds-btn");
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const type = btn.dataset.type;
-      const choice = btn.dataset.choice;
-
-      buttons.forEach(b => {
-        if (b.dataset.type === type) b.classList.remove("selected");
-      });
-      btn.classList.add("selected");
-
-      if (!userPicks[poolId]) userPicks[poolId] = {};
-      if (!userPicks[poolId][gameId]) userPicks[poolId][gameId] = {};
-      userPicks[poolId][gameId][type] = choice;
-    });
-  });
+.team {
+  display: flex;
+  flex-direction: column;
 }
 
-/* -----------------------------
-   SAVE BUTTON
------------------------------- */
-
-function setupSaveButton() {
-  const btn = document.getElementById("save-picks-btn");
-  const statusEl = document.getElementById("save-status");
-
-  btn.addEventListener("click", () => {
-    saveLocalPicks();
-    statusEl.textContent = "Picks saved on this device.";
-    setTimeout(() => (statusEl.textContent = ""), 2500);
-  });
+.team-name {
+  font-weight: 600;
+  font-size: 14px;
 }
 
-/* -----------------------------
-   SCORING LOGIC
------------------------------- */
-
-function evaluateGameResult(game, result) {
-  const { homeScore, awayScore } = result;
-
-  const homeWin = homeScore > awayScore;
-  const awayWin = awayScore > homeScore;
-  const totalPoints = homeScore + awayScore;
-
-  return {
-    moneylineWinner: homeWin ? "home" : "away",
-    spreadWinner:
-      homeScore + game.spread.home > awayScore + game.spread.away
-        ? "home"
-        : "away",
-    totalWinner:
-      totalPoints > game.total
-        ? "over"
-        : totalPoints < game.total
-        ? "under"
-        : "push"
-  };
+.team-tag {
+  font-size: 11px;
+  color: var(--dk-text-muted);
 }
 
-function scoreUserPicks(pool, userEntry, results) {
-  let score = 0;
-
-  for (const game of pool.games) {
-    const gameId = game.id;
-    const picks = userEntry.picks[gameId];
-    const result = results[gameId];
-
-    if (!picks || !result) continue;
-
-    const evalResult = evaluateGameResult(game, result);
-
-    if (picks.moneyline === evalResult.moneylineWinner) score++;
-    if (picks.spread === evalResult.spreadWinner) score++;
-    if (picks.total === evalResult.totalWinner) score++;
-  }
-
-  return score;
+.odds-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
 }
 
-/* -----------------------------
+.odds-btn {
+  border-radius: 8px;
+  border: 1px solid var(--dk-border);
+  background: #f9fafb;
+  padding: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.odds-btn-label {
+  font-size: 11px;
+  color: var(--dk-text-muted);
+}
+
+.odds-btn-value {
+  font-weight: 600;
+}
+
+.odds-btn.selected {
+  background: var(--dk-accent-soft);
+  border-color: var(--dk-accent);
+  color: var(--dk-accent);
+}
+
+/* --------------------------------------------------
+   FOOTER ACTIONS
+-------------------------------------------------- */
+
+.picks-footer {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.primary-btn {
+  border: none;
+  background: var(--dk-accent);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
+}
+
+.save-status {
+  font-size: 12px;
+  color: var(--dk-text-muted);
+}
+
+/* --------------------------------------------------
    LEADERBOARD
------------------------------- */
+-------------------------------------------------- */
 
-async function loadLeaderboard() {
-  try {
-    const poolsRes = await fetch(POOLS_URL);
-    const poolsData = await poolsRes.json();
-    const pool = poolsData.pools.find(p => p.id === poolsData.currentPoolId);
+.leaderboard-container {
+  margin-top: 12px;
+  background: var(--dk-surface);
+  border-radius: var(--dk-radius);
+  padding: 12px;
+  border: 1px solid var(--dk-border);
+}
 
-    const resultsRes = await fetch(RESULTS_URL);
-    const resultsData = await resultsRes.json();
-    const poolResults = resultsData[pool.id];
+.leaderboard-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
 
-    const entriesRes = await fetch(ENTRIES_URL);
-    const entriesData = await entriesRes.json();
-    const entries = entriesData[pool.id];
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
 
-    const leaderboard = entries
-      .map(entry => ({
-        user: entry.user,
-        score: scoreUserPicks(pool, entry, poolResults)
-      }))
-      .sort((a, b) => b.score - a.score);
+/* --------------------------------------------------
+   RESPONSIVE
+-------------------------------------------------- */
 
-    renderLeaderboard(leaderboard);
-  } catch (e) {
-    console.error("Leaderboard error", e);
+@media (min-width: 768px) {
+  .pool-header h1 {
+    font-size: 24px;
+  }
+
+  .matchup-card {
+    padding: 14px;
   }
 }
-
-function renderLeaderboard(rows) {
-  const container = document.getElementById("leaderboard-container");
-  container.innerHTML = "";
-
-  rows.forEach(row => {
-    const div = document.createElement("div");
-    div.className = "leaderboard-row";
-    div.innerHTML = `
-      <span>${row.user}</span>
-      <span>${row.score}</span>
-    `;
-    container.appendChild(div);
-  });
-}
-
