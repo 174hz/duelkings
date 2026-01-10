@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DuelKings – Results Entry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../style.css" />
+
+  <style>
+    body {
+      background: var(--dk-bg);
+      color: var(--dk-text-main);
+      font-family: var(--dk-font);
+      padding: 20px;
+    }
+    .admin-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--dk-surface);
+      padding: 20px;
+      border-radius: var(--dk-radius);
+      border: 1px solid var(--dk-border);
+    }
+    .game-block {
+      background: var(--dk-bg);
+      border: 1px solid var(--dk-border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--dk-border);
+      background: var(--dk-surface);
+      color: var(--dk-text-main);
+    }
+    textarea {
+      width: 100%;
+      height: 260px;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--dk-border);
+      background: var(--dk-surface);
+      color: var(--dk-text-main);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="admin-container">
+    <h1>Results Entry</h1>
+
+    <div class="admin-field">
+      <label>Select Pool</label>
+      <select id="pool-select"></select>
+    </div>
+
+    <div id="games-container"></div>
+
+    <h3>Generated JSON</h3>
+    <textarea id="output" readonly></textarea>
+  </div>
+
+  <script>
+    const POOLS_URL = "../data/pools.json";
+
+    let allPools = [];
+
+    async function loadPools() {
+      const res = await fetch(POOLS_URL);
+      const data = await res.json();
+      allPools = data.pools;
+      setupPoolDropdown();
+    }
+
+    function setupPoolDropdown() {
+      const select = document.getElementById("pool-select");
+      allPools.forEach(pool => {
+        const opt = document.createElement("option");
+        opt.value = pool.id;
+        opt.textContent = pool.label;
+        select.appendChild(opt);
+      });
+
+      select.addEventListener("change", () => renderGames(select.value));
+      renderGames(select.value);
+    }
+
+    function renderGames(poolId) {
+      const pool = allPools.find(p => p.id === poolId);
+      const container = document.getElementById("games-container");
+      container.innerHTML = "";
+
+      pool.games.forEach(game => {
+        const div = document.createElement("div");
+        div.className = "game-block";
+        div.innerHTML = `
+          <strong>${game.awayTeam} @ ${game.homeTeam}</strong>
+          <div>
+            <label>${game.homeTeam} Score</label>
+            <input data-game="${game.id}" data-team="home" type="number" />
+          </div>
+          <div>
+            <label>${game.awayTeam} Score</label>
+            <input data-game="${game.id}" data-team="away" type="number" />
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      container.addEventListener("input", () => generateJSON(poolId));
+      generateJSON(poolId);
+    }
+
+    function generateJSON(poolId) {
+      const pool = allPools.find(p => p.id === poolId);
+      const resultObj = {};
+
+      pool.games.forEach(game => {
+        const home = document.querySelector(`input[data-game="${game.id}"][data-team="home"]`).value;
+        const away = document.querySelector(`input[data-game="${game.id}"][data-team="away"]`).value;
+
+        if (home !== "" && away !== "") {
+          resultObj[game.id] = {
+            homeScore: Number(home),
+            awayScore: Number(away)
+          };
+        }
+      });
+
+      document.getElementById("output").value =
+        JSON.stringify({ [poolId]: resultObj }, null, 2);
+    }
+
+    loadPools();
+  </script>
+</body>
+</html>
