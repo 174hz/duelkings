@@ -1,12 +1,18 @@
 {
   "nfl-week1": {
-    "buf-nyj": {
-      "homeScore": 20,
-      "awayScore": 24
-    },
-    "dal-phi": {
-      "homeScore": 27,
-      "awayScore": 23
-    }
+    "buf-nyj": { "homeScore": 24, "awayScore": 20 },
+    "dal-phi": { "homeScore": 17, "awayScore": 27 }
+  },
+  "nhl-saturday": {
+    "tor-mtl": { "homeScore": 2, "awayScore": 4 },
+    "chi-bos": { "homeScore": 3, "awayScore": 2 }
+  },
+  "nba-friday": {
+    "lal-gsw": { "homeScore": 110, "awayScore": 115 },
+    "bos-mia": { "homeScore": 102, "awayScore": 108 }
+  },
+  "mlb-sunday": {
+    "nyy-bos": { "homeScore": 3, "awayScore": 5 },
+    "lad-sf": { "homeScore": 6, "awayScore": 7 }
   }
 }
