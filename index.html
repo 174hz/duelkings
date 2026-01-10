@@ -8,17 +8,6 @@
 </head>
 
 <body>
-
-  <!-- LOGIN SCREEN -->
-  <div id="login-screen" class="login-screen">
-    <div class="login-box">
-      <h2>Welcome to DuelKings</h2>
-      <p>Enter a username to continue</p>
-      <input id="login-username" type="text" placeholder="Your username" />
-      <button id="login-btn" class="primary-btn">Enter</button>
-    </div>
-  </div>
-
   <!-- HEADER -->
   <header class="dk-header">
     <div class="dk-header-left">
@@ -33,6 +22,10 @@
     </div>
 
     <div class="dk-header-right">
+      <div id="login-inline" class="login-inline">
+        <input id="login-username" type="text" placeholder="Username" />
+        <button id="login-btn" class="primary-btn small">Enter</button>
+      </div>
       <span id="current-user" class="current-user"></span>
       <button id="theme-toggle" class="dk-theme-toggle">Dark mode</button>
     </div>
@@ -43,7 +36,6 @@
 
     <!-- POOLS VIEW -->
     <section id="pools-view" class="view active">
-
       <div class="pool-header">
         <div class="pool-header-top">
           <h1 id="pool-title">Loading pool…</h1>
