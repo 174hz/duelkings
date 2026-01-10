@@ -1,0 +1,34 @@
+{
+  "nfl-week1": [
+    {
+      "user": "Alice",
+      "picks": {
+        "buf-nyj": {
+          "spread": "away",
+          "moneyline": "away",
+          "total": "over"
+        },
+        "dal-phi": {
+          "spread": "home",
+          "moneyline": "home",
+          "total": "under"
+        }
+      }
+    },
+    {
+      "user": "Bob",
+      "picks": {
+        "buf-nyj": {
+          "spread": "home",
+          "moneyline": "home",
+          "total": "under"
+        },
+        "dal-phi": {
+          "spread": "away",
+          "moneyline": "away",
+          "total": "over"
+        }
+      }
+    }
+  ]
+}
