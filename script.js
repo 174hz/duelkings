@@ -32,16 +32,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* --------------------------------------------------
-   LOGIN SYSTEM
+   LOGIN SYSTEM (INLINE)
 -------------------------------------------------- */
 
 function initLogin() {
   const savedUser = localStorage.getItem(USER_KEY);
-  const loginScreen = document.getElementById("login-screen");
+  const loginInline = document.getElementById("login-inline");
   const userLabel = document.getElementById("current-user");
 
   if (savedUser) {
-    loginScreen.style.display = "none";
+    loginInline.style.display = "none";
     userLabel.textContent = savedUser;
     return;
   }
@@ -49,9 +49,10 @@ function initLogin() {
   document.getElementById("login-btn").addEventListener("click", () => {
     const username = document.getElementById("login-username").value.trim();
     if (!username) return;
+
     localStorage.setItem(USER_KEY, username);
     userLabel.textContent = username;
-    loginScreen.style.display = "none";
+    loginInline.style.display = "none";
   });
 }
 
@@ -451,3 +452,4 @@ function renderLeaderboard(rows) {
     container.appendChild(div);
   });
 }
+
