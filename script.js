@@ -13,6 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSaveButton();
 });
 
+/* -----------------------------
+   NAVIGATION
+------------------------------ */
+
 function setupNav() {
   const tabs = document.querySelectorAll(".nav-tab");
   tabs.forEach(tab => {
@@ -24,9 +28,17 @@ function setupNav() {
       document.querySelectorAll(".view").forEach(v => {
         v.classList.toggle("active", v.id === `${view}-view`);
       });
+
+      if (view === "leaderboard") {
+        loadLeaderboard();
+      }
     });
   });
 }
+
+/* -----------------------------
+   LOCAL STORAGE
+------------------------------ */
 
 function loadLocalPicks() {
   try {
@@ -45,6 +57,10 @@ function saveLocalPicks() {
   }
 }
 
+/* -----------------------------
+   LOAD POOLS
+------------------------------ */
+
 async function loadPools() {
   try {
     const res = await fetch(POOLS_URL);
@@ -56,6 +72,10 @@ async function loadPools() {
     console.error("Failed to load pools", e);
   }
 }
+
+/* -----------------------------
+   RENDER POOL + MATCHUPS
+------------------------------ */
 
 function renderPool(pool) {
   const titleEl = document.getElementById("pool-title");
@@ -157,6 +177,10 @@ function attachSelectionHandlers(card, poolId, gameId) {
   });
 }
 
+/* -----------------------------
+   SAVE BUTTON
+------------------------------ */
+
 function setupSaveButton() {
   const btn = document.getElementById("save-picks-btn");
   const statusEl = document.getElementById("save-status");
@@ -167,3 +191,96 @@ function setupSaveButton() {
     setTimeout(() => (statusEl.textContent = ""), 2500);
   });
 }
+
+/* -----------------------------
+   SCORING LOGIC
+------------------------------ */
+
+function evaluateGameResult(game, result) {
+  const { homeScore, awayScore } = result;
+
+  const homeWin = homeScore > awayScore;
+  const awayWin = awayScore > homeScore;
+  const totalPoints = homeScore + awayScore;
+
+  return {
+    moneylineWinner: homeWin ? "home" : "away",
+    spreadWinner:
+      homeScore + game.spread.home > awayScore + game.spread.away
+        ? "home"
+        : "away",
+    totalWinner:
+      totalPoints > game.total
+        ? "over"
+        : totalPoints < game.total
+        ? "under"
+        : "push"
+  };
+}
+
+function scoreUserPicks(pool, userEntry, results) {
+  let score = 0;
+
+  for (const game of pool.games) {
+    const gameId = game.id;
+    const picks = userEntry.picks[gameId];
+    const result = results[gameId];
+
+    if (!picks || !result) continue;
+
+    const evalResult = evaluateGameResult(game, result);
+
+    if (picks.moneyline === evalResult.moneylineWinner) score++;
+    if (picks.spread === evalResult.spreadWinner) score++;
+    if (picks.total === evalResult.totalWinner) score++;
+  }
+
+  return score;
+}
+
+/* -----------------------------
+   LEADERBOARD
+------------------------------ */
+
+async function loadLeaderboard() {
+  try {
+    const poolsRes = await fetch(POOLS_URL);
+    const poolsData = await poolsRes.json();
+    const pool = poolsData.pools.find(p => p.id === poolsData.currentPoolId);
+
+    const resultsRes = await fetch(RESULTS_URL);
+    const resultsData = await resultsRes.json();
+    const poolResults = resultsData[pool.id];
+
+    const entriesRes = await fetch(ENTRIES_URL);
+    const entriesData = await entriesRes.json();
+    const entries = entriesData[pool.id];
+
+    const leaderboard = entries
+      .map(entry => ({
+        user: entry.user,
+        score: scoreUserPicks(pool, entry, poolResults)
+      }))
+      .sort((a, b) => b.score - a.score);
+
+    renderLeaderboard(leaderboard);
+  } catch (e) {
+    console.error("Leaderboard error", e);
+  }
+}
+
+function renderLeaderboard(rows) {
+  const container = document.getElementById("leaderboard-container");
+  container.innerHTML = "";
+
+  rows.forEach(row => {
+    const div = document.createElement("div");
+    div.className = "leaderboard-row";
+    div.innerHTML = `
+      <span>${row.user}</span>
+      <span>${row.score}</span>
+    `;
+    container.appendChild(div);
+  });
+}
+
