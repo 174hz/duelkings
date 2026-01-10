@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DuelKings – Free-to-Play Pools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="dk-header">
+    <div class="dk-header-left">
+      <div class="dk-logo">DuelKings</div>
+
+      <nav class="dk-nav">
+        <button class="nav-tab active" data-view="pools">Pools</button>
+        <button class="nav-tab" data-view="leaderboard">Leaderboard</button>
+      </nav>
+    </div>
+
+    <div class="dk-header-right">
+      <span class="dk-tagline">Free to play. Bragging rights only.</span>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="dk-main">
+
+    <!-- POOLS VIEW -->
+    <section id="pools-view" class="view active">
+      <div class="pool-header">
+        <h1 id="pool-title">Loading pool…</h1>
+        <div id="pool-meta" class="pool-meta"></div>
+      </div>
+
+      <div id="games-container" class="games-container">
+        <!-- Matchup cards injected by script.js -->
+      </div>
+
+      <div class="picks-footer">
+        <button id="save-picks-btn" class="primary-btn">Save my picks (this device)</button>
+        <div id="save-status" class="save-status"></div>
+      </div>
+    </section>
+
+    <!-- LEADERBOARD VIEW -->
+    <section id="leaderboard-view" class="view">
+      <h2>Leaderboard</h2>
+      <div id="leaderboard-container" class="leaderboard-container">
+        <!-- Leaderboard rows injected by script.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
