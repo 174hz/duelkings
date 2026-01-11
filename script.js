@@ -1,10 +1,15 @@
 /* --------------------------------------------------
-   CONSTANTS
+   DYNAMIC PATH RESOLUTION
 -------------------------------------------------- */
 
-const POOLS_URL = "./data/pools.json";
-const RESULTS_URL = "./data/results.json";
-const ENTRIES_URL = "./data/entries.json";
+const BASE_PATH = window.location.pathname.includes("/admin/")
+  ? "../data/"
+  : "./data/";
+
+const POOLS_URL = BASE_PATH + "pools.json";
+const RESULTS_URL = BASE_PATH + "results.json";
+const ENTRIES_URL = BASE_PATH + "entries.json";
+
 
 const STORAGE_KEY = "duelkings_picks";
 const USER_KEY = "duelkings_user";
