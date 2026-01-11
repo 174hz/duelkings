@@ -1,0 +1,18 @@
+{
+  "id": "sample-nfl",
+  "sport": "nfl",
+  "label": "Sample NFL Pool",
+  "status": "open",
+  "deadline": "2030-01-01T17:00:00Z",
+  "games": [
+    {
+      "id": "kc-buf",
+      "startTime": "2030-01-01T17:00:00Z",
+      "homeTeam": "Buffalo Bills",
+      "awayTeam": "Kansas City Chiefs",
+      "spread": { "home": -2.5, "away": 2.5 },
+      "moneyline": { "home": -140, "away": 120 },
+      "total": 48.5
+    }
+  ]
+}
