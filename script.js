@@ -10,7 +10,6 @@ const POOLS_URL = BASE_PATH + "pools.json";
 const RESULTS_URL = BASE_PATH + "results.json";
 const ENTRIES_URL = BASE_PATH + "entries.json";
 
-
 const STORAGE_KEY = "duelkings_picks";
 const USER_KEY = "duelkings_user";
 const THEME_KEY = "duelkings_theme";
@@ -145,8 +144,8 @@ function saveLocalPicks() {
 async function loadPools() {
   try {
     const [poolsRes, resultsRes] = await Promise.all([
-      fetch(POOLS_URL),
-      fetch(RESULTS_URL)
+      fetch(POOLS_URL + "?v=" + Date.now()),
+      fetch(RESULTS_URL + "?v=" + Date.now())
     ]);
 
     const poolsData = await poolsRes.json();
@@ -158,13 +157,11 @@ async function loadPools() {
     const now = Date.now();
 
     allPools.forEach(pool => {
-      // Auto-close after deadline
       const deadlineTime = new Date(pool.deadline).getTime();
       if (deadlineTime < now && pool.status === "open") {
         pool.status = "closed";
       }
 
-      // Auto-complete when all games in this pool have results
       const poolResults = resultsData[pool.id];
       if (poolResults) {
         const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
@@ -446,15 +443,15 @@ function scoreUserPicks(pool, userEntry, results) {
 
 async function loadLeaderboard() {
   try {
-    const poolsRes = await fetch(POOLS_URL);
+    const poolsRes = await fetch(POOLS_URL + "?v=" + Date.now());
     const poolsData = await poolsRes.json();
     const pool = poolsData.pools.find(p => p.id === poolsData.currentPoolId);
 
-    const resultsRes = await fetch(RESULTS_URL);
+    const resultsRes = await fetch(RESULTS_URL + "?v=" + Date.now());
     const resultsData = await resultsRes.json();
     const poolResults = resultsData[pool.id];
 
-    const entriesRes = await fetch(ENTRIES_URL);
+    const entriesRes = await fetch(ENTRIES_URL + "?v=" + Date.now());
     const entriesData = await entriesRes.json();
     const entries = entriesData[pool.id];
 
