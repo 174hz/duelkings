@@ -1,24 +1,39 @@
 {
   "nfl-week1": [
     {
-      "user": "Duane",
+      "user": "demoUser1",
+      "picks": {
+        "buf-nyj": {
+          "spread": "away",
+          "moneyline": "away",
+          "total": "over"
+        },
+        "dal-phi": {
+          "spread": "home",
+          "moneyline": "home",
+          "total": "under"
+        }
+      }
+    },
+    {
+      "user": "demoUser2",
       "picks": {
         "buf-nyj": {
           "spread": "home",
           "moneyline": "home",
-          "total": "over"
+          "total": "under"
         },
         "dal-phi": {
           "spread": "away",
           "moneyline": "away",
-          "total": "under"
+          "total": "over"
         }
       }
     }
   ],
   "nhl-saturday": [
     {
-      "user": "Duane",
+      "user": "demoUser1",
       "picks": {
         "tor-mtl": {
           "spread": "away",
@@ -35,34 +50,34 @@
   ],
   "nba-friday": [
     {
-      "user": "Duane",
+      "user": "demoUser3",
       "picks": {
         "lal-gsw": {
           "spread": "away",
           "moneyline": "away",
-          "total": "under"
+          "total": "over"
         },
         "bos-mia": {
           "spread": "home",
           "moneyline": "home",
-          "total": "over"
+          "total": "under"
         }
       }
     }
   ],
   "mlb-sunday": [
     {
-      "user": "Duane",
+      "user": "demoUser4",
       "picks": {
         "nyy-bos": {
           "spread": "away",
           "moneyline": "away",
-          "total": "under"
+          "total": "over"
         },
         "lad-sf": {
           "spread": "home",
           "moneyline": "home",
-          "total": "over"
+          "total": "under"
         }
       }
     }
