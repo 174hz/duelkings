@@ -1,9 +1,9 @@
 {
   "currentPoolId": "nfl-week1",
-  "pools": [
-    {
+  "pools": {
+    "nfl-week1": {
       "id": "nfl-week1",
-      "sport": "NFL",
+      "sport": "nfl",
       "label": "NFL Week 1 Main Pool",
       "status": "open",
       "deadline": "2026-11-10T17:00:00Z",
@@ -13,24 +13,37 @@
           "startTime": "2026-11-10T17:00:00Z",
           "homeTeam": "New York Jets",
           "awayTeam": "Buffalo Bills",
-          "spread": { "home": -3.5, "away": 3.5 },
-          "moneyline": { "home": -150, "away": 130 },
-          "total": 44.5
+          "spread": {
+            "home": { "line": -3.5 },
+            "away": { "line": 3.5 }
+          },
+          "moneyline": {
+            "home": { "price": -150 },
+            "away": { "price": 130 }
+          },
+          "total": { "line": 44.5 }
         },
         {
           "id": "dal-phi",
           "startTime": "2026-11-10T20:25:00Z",
           "homeTeam": "Philadelphia Eagles",
           "awayTeam": "Dallas Cowboys",
-          "spread": { "home": -2.5, "away": 2.5 },
-          "moneyline": { "home": -135, "away": 115 },
-          "total": 47
+          "spread": {
+            "home": { "line": -2.5 },
+            "away": { "line": 2.5 }
+          },
+          "moneyline": {
+            "home": { "price": -135 },
+            "away": { "price": 115 }
+          },
+          "total": { "line": 47 }
         }
       ]
     },
-    {
+
+    "nhl-saturday": {
       "id": "nhl-saturday",
-      "sport": "NHL",
+      "sport": "nhl",
       "label": "NHL Saturday Night Picks",
       "status": "open",
       "deadline": "2026-11-17T23:00:00Z",
@@ -40,24 +53,37 @@
           "startTime": "2026-11-17T23:00:00Z",
           "homeTeam": "Montreal Canadiens",
           "awayTeam": "Toronto Maple Leafs",
-          "spread": { "home": -1.5, "away": 1.5 },
-          "moneyline": { "home": -120, "away": 105 },
-          "total": 6.5
+          "spread": {
+            "home": { "line": -1.5 },
+            "away": { "line": 1.5 }
+          },
+          "moneyline": {
+            "home": { "price": -120 },
+            "away": { "price": 105 }
+          },
+          "total": { "line": 6.5 }
         },
         {
           "id": "chi-bos",
           "startTime": "2026-11-18T00:00:00Z",
           "homeTeam": "Boston Bruins",
           "awayTeam": "Chicago Blackhawks",
-          "spread": { "home": -1.5, "away": 1.5 },
-          "moneyline": { "home": -180, "away": 150 },
-          "total": 5.5
+          "spread": {
+            "home": { "line": -1.5 },
+            "away": { "line": 1.5 }
+          },
+          "moneyline": {
+            "home": { "price": -180 },
+            "away": { "price": 150 }
+          },
+          "total": { "line": 5.5 }
         }
       ]
     },
-    {
+
+    "nba-friday": {
       "id": "nba-friday",
-      "sport": "NBA",
+      "sport": "nba",
       "label": "NBA Friday Night Slate",
       "status": "open",
       "deadline": "2026-11-06T00:00:00Z",
@@ -67,24 +93,37 @@
           "startTime": "2026-11-06T00:00:00Z",
           "homeTeam": "Golden State Warriors",
           "awayTeam": "Los Angeles Lakers",
-          "spread": { "home": -4.5, "away": 4.5 },
-          "moneyline": { "home": -160, "away": 135 },
-          "total": 228.5
+          "spread": {
+            "home": { "line": -4.5 },
+            "away": { "line": 4.5 }
+          },
+          "moneyline": {
+            "home": { "price": -160 },
+            "away": { "price": 135 }
+          },
+          "total": { "line": 228.5 }
         },
         {
           "id": "bos-mia",
           "startTime": "2026-11-06T01:30:00Z",
           "homeTeam": "Miami Heat",
           "awayTeam": "Boston Celtics",
-          "spread": { "home": 1.5, "away": -1.5 },
-          "moneyline": { "home": 105, "away": -125 },
-          "total": 221.5
+          "spread": {
+            "home": { "line": 1.5 },
+            "away": { "line": -1.5 }
+          },
+          "moneyline": {
+            "home": { "price": 105 },
+            "away": { "price": -125 }
+          },
+          "total": { "line": 221.5 }
         }
       ]
     },
-    {
+
+    "mlb-sunday": {
       "id": "mlb-sunday",
-      "sport": "MLB",
+      "sport": "mlb",
       "label": "MLB Sunday Picks",
       "status": "open",
       "deadline": "2026-11-12T17:00:00Z",
@@ -94,20 +133,32 @@
           "startTime": "2026-11-12T17:00:00Z",
           "homeTeam": "Boston Red Sox",
           "awayTeam": "New York Yankees",
-          "spread": { "home": -1.5, "away": 1.5 },
-          "moneyline": { "home": -115, "away": -105 },
-          "total": 9.0
+          "spread": {
+            "home": { "line": -1.5 },
+            "away": { "line": 1.5 }
+          },
+          "moneyline": {
+            "home": { "price": -115 },
+            "away": { "price": -105 }
+          },
+          "total": { "line": 9.0 }
         },
         {
           "id": "lad-sf",
           "startTime": "2026-11-12T20:00:00Z",
           "homeTeam": "San Francisco Giants",
           "awayTeam": "Los Angeles Dodgers",
-          "spread": { "home": 1.5, "away": -1.5 },
-          "moneyline": { "home": 140, "away": -160 },
-          "total": 8.0
+          "spread": {
+            "home": { "line": 1.5 },
+            "away": { "line": -1.5 }
+          },
+          "moneyline": {
+            "home": { "price": 140 },
+            "away": { "price": -160 }
+          },
+          "total": { "line": 8.0 }
         }
       ]
     }
-  ]
+  }
 }
