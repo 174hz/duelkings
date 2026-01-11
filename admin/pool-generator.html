@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pool Generator</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="admin-shell">
+  <aside class="admin-sidebar">
+    <h2>DuelKings Admin</h2>
+    <nav class="admin-nav">
+      <a href="index.html">Dashboard</a>
+      <a href="pool-builder.html">Pool Builder</a>
+      <a href="pool-generator.html">Pool Generator</a>
+      <a href="results-entry.html">Results Entry</a>
+      <a href="entries-viewer.html">Entries Viewer</a>
+      <a href="entries-export.html">Entries Export</a>
+      <a href="pool-history.html">Pool History</a>
+      <a href="user-picks-viewer.html">User Picks Viewer</a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <h1>Pool Generator</h1>
+
+    <textarea id="input" placeholder="Paste raw game data here"></textarea>
+    <button id="generate">Generate Pool JSON</button>
+    <textarea id="output" readonly></textarea>
+  </main>
+
+  <script>
+    document.getElementById("generate").onclick = () => {
+      const raw = document.getElementById("input").value.trim();
+      if (!raw) return;
+
+      const lines = raw.split("\n").map(l => l.trim()).filter(Boolean);
+
+      const games = lines.map((line, i) => {
+        const [away, home, spreadAway, spreadHome, mlAway, mlHome, total] = line.split(",");
+        return {
+          id: `game-${i + 1}`,
+          startTime: "2030-01-01T00:00:00Z",
+          homeTeam: home,
+          awayTeam: away,
+          spread: { home: Number(spreadHome), away: Number(spreadAway) },
+          moneyline: { home: Number(mlHome), away: Number(mlAway) },
+          total: Number(total)
+        };
+      });
+
+      const pool = {
+        id: "generated-pool",
+        sport: "custom",
+        label: "Generated Pool",
+        status: "open",
+        deadline: "2030-01-01T00:00:00Z",
+        games
+      };
+
+      document.getElementById("output").value = JSON.stringify(pool, null, 2);
+    };
+  </script>
+
+  <script src="admin-auth.js"></script>
+</body>
+</html>
