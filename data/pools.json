@@ -1,7 +1,7 @@
 {
   "currentPoolId": "nfl-week1",
-  "pools": {
-    "nfl-week1": {
+  "pools": [
+    {
       "id": "nfl-week1",
       "sport": "nfl",
       "label": "NFL Week 1 Main Pool",
@@ -40,8 +40,7 @@
         }
       ]
     },
-
-    "nhl-saturday": {
+    {
       "id": "nhl-saturday",
       "sport": "nhl",
       "label": "NHL Saturday Night Picks",
@@ -80,8 +79,7 @@
         }
       ]
     },
-
-    "nba-friday": {
+    {
       "id": "nba-friday",
       "sport": "nba",
       "label": "NBA Friday Night Slate",
@@ -120,8 +118,7 @@
         }
       ]
     },
-
-    "mlb-sunday": {
+    {
       "id": "mlb-sunday",
       "sport": "mlb",
       "label": "MLB Sunday Picks",
@@ -160,5 +157,5 @@
         }
       ]
     }
-  }
+  ]
 }
