@@ -1,0 +1,18 @@
+{
+  "id": "sample-nba",
+  "sport": "nba",
+  "label": "Sample NBA Pool",
+  "status": "open",
+  "deadline": "2030-01-03T00:00:00Z",
+  "games": [
+    {
+      "id": "den-lal",
+      "startTime": "2030-01-03T00:00:00Z",
+      "homeTeam": "Los Angeles Lakers",
+      "awayTeam": "Denver Nuggets",
+      "spread": { "home": -3.5, "away": 3.5 },
+      "moneyline": { "home": -150, "away": 130 },
+      "total": 226.5
+    }
+  ]
+}
