@@ -1,0 +1,18 @@
+{
+  "id": "sample-mlb",
+  "sport": "mlb",
+  "label": "Sample MLB Pool",
+  "status": "open",
+  "deadline": "2030-01-04T17:00:00Z",
+  "games": [
+    {
+      "id": "nyy-lad",
+      "startTime": "2030-01-04T17:00:00Z",
+      "homeTeam": "Los Angeles Dodgers",
+      "awayTeam": "New York Yankees",
+      "spread": { "home": -1.5, "away": 1.5 },
+      "moneyline": { "home": -135, "away": 115 },
+      "total": 8.5
+    }
+  ]
+}
