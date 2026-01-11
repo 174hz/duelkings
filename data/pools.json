@@ -14,14 +14,14 @@
           "homeTeam": "New York Jets",
           "awayTeam": "Buffalo Bills",
           "spread": {
-            "home": { "line": -3.5 },
-            "away": { "line": 3.5 }
+            "home": -3.5,
+            "away": 3.5
           },
           "moneyline": {
-            "home": { "price": -150 },
-            "away": { "price": 130 }
+            "home": -150,
+            "away": 130
           },
-          "total": { "line": 44.5 }
+          "total": 44.5
         },
         {
           "id": "dal-phi",
@@ -29,14 +29,14 @@
           "homeTeam": "Philadelphia Eagles",
           "awayTeam": "Dallas Cowboys",
           "spread": {
-            "home": { "line": -2.5 },
-            "away": { "line": 2.5 }
+            "home": -2.5,
+            "away": 2.5
           },
           "moneyline": {
-            "home": { "price": -135 },
-            "away": { "price": 115 }
+            "home": -135,
+            "away": 115
           },
-          "total": { "line": 47 }
+          "total": 47
         }
       ]
     },
@@ -53,14 +53,14 @@
           "homeTeam": "Montreal Canadiens",
           "awayTeam": "Toronto Maple Leafs",
           "spread": {
-            "home": { "line": -1.5 },
-            "away": { "line": 1.5 }
+            "home": -1.5,
+            "away": 1.5
           },
           "moneyline": {
-            "home": { "price": -120 },
-            "away": { "price": 105 }
+            "home": -120,
+            "away": 105
           },
-          "total": { "line": 6.5 }
+          "total": 6.5
         },
         {
           "id": "chi-bos",
@@ -68,14 +68,14 @@
           "homeTeam": "Boston Bruins",
           "awayTeam": "Chicago Blackhawks",
           "spread": {
-            "home": { "line": -1.5 },
-            "away": { "line": 1.5 }
+            "home": -1.5,
+            "away": 1.5
           },
           "moneyline": {
-            "home": { "price": -180 },
-            "away": { "price": 150 }
+            "home": -180,
+            "away": 150
           },
-          "total": { "line": 5.5 }
+          "total": 5.5
         }
       ]
     },
@@ -92,14 +92,14 @@
           "homeTeam": "Golden State Warriors",
           "awayTeam": "Los Angeles Lakers",
           "spread": {
-            "home": { "line": -4.5 },
-            "away": { "line": 4.5 }
+            "home": -4.5,
+            "away": 4.5
           },
           "moneyline": {
-            "home": { "price": -160 },
-            "away": { "price": 135 }
+            "home": -160,
+            "away": 135
           },
-          "total": { "line": 228.5 }
+          "total": 228.5
         },
         {
           "id": "bos-mia",
@@ -107,14 +107,14 @@
           "homeTeam": "Miami Heat",
           "awayTeam": "Boston Celtics",
           "spread": {
-            "home": { "line": 1.5 },
-            "away": { "line": -1.5 }
+            "home": 1.5,
+            "away": -1.5
           },
           "moneyline": {
-            "home": { "price": 105 },
-            "away": { "price": -125 }
+            "home": 105,
+            "away": -125
           },
-          "total": { "line": 221.5 }
+          "total": 221.5
         }
       ]
     },
@@ -131,14 +131,14 @@
           "homeTeam": "Boston Red Sox",
           "awayTeam": "New York Yankees",
           "spread": {
-            "home": { "line": -1.5 },
-            "away": { "line": 1.5 }
+            "home": -1.5,
+            "away": 1.5
           },
           "moneyline": {
-            "home": { "price": -115 },
-            "away": { "price": -105 }
+            "home": -115,
+            "away": -105
           },
-          "total": { "line": 9.0 }
+          "total": 9.0
         },
         {
           "id": "lad-sf",
@@ -146,14 +146,14 @@
           "homeTeam": "San Francisco Giants",
           "awayTeam": "Los Angeles Dodgers",
           "spread": {
-            "home": { "line": 1.5 },
-            "away": { "line": -1.5 }
+            "home": 1.5,
+            "away": -1.5
           },
           "moneyline": {
-            "home": { "price": 140 },
-            "away": { "price": -160 }
+            "home": 140,
+            "away": -160
           },
-          "total": { "line": 8.0 }
+          "total": 8.0
         }
       ]
     }
