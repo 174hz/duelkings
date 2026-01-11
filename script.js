@@ -12,6 +12,7 @@ const THEME_KEY = "duelkings_theme";
 
 let currentPool = null;
 let allPools = [];
+let allResults = {};
 let userPicks = {};
 
 /* --------------------------------------------------
@@ -133,16 +134,43 @@ function saveLocalPicks() {
 
 /* --------------------------------------------------
    LOAD POOLS + MULTI-SPORT SELECTORS
+   + AUTO-CLOSE / AUTO-COMPLETE
 -------------------------------------------------- */
 
 async function loadPools() {
   try {
-    const res = await fetch(POOLS_URL);
-    const data = await res.json();
-    allPools = data.pools;
+    const [poolsRes, resultsRes] = await Promise.all([
+      fetch(POOLS_URL),
+      fetch(RESULTS_URL)
+    ]);
+
+    const poolsData = await poolsRes.json();
+    const resultsData = await resultsRes.json();
+
+    allPools = poolsData.pools;
+    allResults = resultsData;
+
+    const now = Date.now();
+
+    allPools.forEach(pool => {
+      // Auto-close after deadline
+      const deadlineTime = new Date(pool.deadline).getTime();
+      if (deadlineTime < now && pool.status === "open") {
+        pool.status = "closed";
+      }
+
+      // Auto-complete when all games in this pool have results
+      const poolResults = resultsData[pool.id];
+      if (poolResults) {
+        const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
+        if (allGamesScored) {
+          pool.status = "completed";
+        }
+      }
+    });
 
     const defaultPool =
-      allPools.find(p => p.id === data.currentPoolId) || allPools[0];
+      allPools.find(p => p.id === poolsData.currentPoolId) || allPools[0];
 
     setupPoolSelectors(defaultPool);
     setCurrentPool(defaultPool);
