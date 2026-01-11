@@ -1,0 +1,26 @@
+(function () {
+  const ADMIN_TOKEN_KEY = "duelkings_admin_token";
+  const EXPECTED_PASSWORD = "dk-operator-2025"; // change this
+
+  function hasValidToken() {
+    return localStorage.getItem(ADMIN_TOKEN_KEY) === "ok";
+  }
+
+  function promptForPassword() {
+    const pwd = prompt("Admin access only. Enter password:");
+    if (pwd === EXPECTED_PASSWORD) {
+      localStorage.setItem(ADMIN_TOKEN_KEY, "ok");
+      return true;
+    }
+    alert("Access denied.");
+    return false;
+  }
+
+  if (!hasValidToken()) {
+    const ok = promptForPassword();
+    if (!ok) {
+      document.body.innerHTML = "<h2>Access denied.</h2>";
+      throw new Error("Admin auth failed");
+    }
+  }
+})();
