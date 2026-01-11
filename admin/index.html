@@ -5,55 +5,32 @@
   <title>DuelKings Admin Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="../style.css" />
-
-  <style>
-    body {
-      background: var(--dk-bg);
-      color: var(--dk-text-main);
-      font-family: var(--dk-font);
-      padding: 20px;
-    }
-    .admin-card {
-      background: var(--dk-surface);
-      border: 1px solid var(--dk-border);
-      border-radius: var(--dk-radius);
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-    a {
-      color: var(--dk-accent);
-      font-weight: 600;
-      text-decoration: none;
-    }
-  </style>
 </head>
 
-<body>
-  <h1>DuelKings Admin Dashboard</h1>
+<body class="admin-shell">
+  <aside class="admin-sidebar">
+    <h2>DuelKings Admin</h2>
+    <nav class="admin-nav">
+      <a href="index.html">Dashboard</a>
+      <a href="pool-builder.html">Pool Builder</a>
+      <a href="results-entry.html">Results Entry</a>
+      <a href="entries-viewer.html">Entries Viewer</a>
+      <a href="entries-export.html">Entries Export</a>
+      <a href="pool-history.html">Pool History</a>
+      <a href="user-picks-viewer.html">User Picks Viewer</a>
+    </nav>
+  </aside>
 
-  <div class="admin-card">
-    <h2>Create Pools</h2>
-    <a href="pool-builder.html">Open Pool Builder →</a>
-  </div>
+  <main class="admin-main">
+    <h1>Dashboard</h1>
 
-  <div class="admin-card">
-    <h2>Enter Results</h2>
-    <a href="results-entry.html">Open Results Entry →</a>
-  </div>
+    <div class="admin-card">
+      <h2>Operations</h2>
+      <p>Use the links on the left to manage pools, results, entries, and exports.</p>
+    </div>
+  </main>
 
-  <div class="admin-card">
-    <h2>View Entries</h2>
-    <a href="entries-viewer.html">Open Entries Viewer →</a>
-  </div>
-
-  <div class="admin-card">
-    <h2>Pool History</h2>
-    <a href="pool-history.html">Open Pool History →</a>
-  </div>
-
-  <div class="admin-card">
-    <h2>User Picks Viewer</h2>
-    <a href="user-picks-viewer.html">Open User Picks Viewer →</a>
-  </div>
+  <script src="admin-auth.js"></script>
 </body>
 </html>
+
