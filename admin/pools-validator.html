@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pools Validator</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="admin-shell">
+  <aside class="admin-sidebar">
+    <h2>DuelKings Admin</h2>
+    <nav class="admin-nav">
+      <a href="index.html">Dashboard</a>
+      <a href="pools-validator.html">Pools Validator</a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <h1>Pools Validator</h1>
+
+    <textarea id="input" placeholder="Paste pools.json here"></textarea>
+    <button id="validate">Validate</button>
+    <pre id="output"></pre>
+  </main>
+
+  <script>
+    document.getElementById("validate").onclick = () => {
+      const raw = document.getElementById("input").value.trim();
+      const out = document.getElementById("output");
+
+      try {
+        const data = JSON.parse(raw);
+        const pools = data.pools || [];
+
+        const errors = [];
+
+        pools.forEach(pool => {
+          if (!pool.id) errors.push(`Pool missing id`);
+          if (!pool.sport) errors.push(`Pool ${pool.id} missing sport`);
+          if (!pool.games || !Array.isArray(pool.games)) {
+            errors.push(`Pool ${pool.id} missing games array`);
+            return;
+          }
+
+          pool.games.forEach(game => {
+            if (typeof game.spread?.home !== "number") {
+              errors.push(`Game ${game.id} invalid spread.home`);
+            }
+            if (typeof game.moneyline?.home !== "number") {
+              errors.push(`Game ${game.id} invalid moneyline.home`);
+            }
+            if (typeof game.total !== "number") {
+              errors.push(`Game ${game.id} invalid total`);
+            }
+          });
+        });
+
+        out.textContent = errors.length ? errors.join("\n") : "VALID";
+      } catch (e) {
+        out.textContent = "Invalid JSON";
+      }
+    };
+  </script>
+
+  <script src="admin-auth.js"></script>
+</body>
+</html>
