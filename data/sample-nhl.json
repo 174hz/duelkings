@@ -1,0 +1,18 @@
+{
+  "id": "sample-nhl",
+  "sport": "nhl",
+  "label": "Sample NHL Pool",
+  "status": "open",
+  "deadline": "2030-01-02T00:00:00Z",
+  "games": [
+    {
+      "id": "edm-van",
+      "startTime": "2030-01-02T00:00:00Z",
+      "homeTeam": "Vancouver Canucks",
+      "awayTeam": "Edmonton Oilers",
+      "spread": { "home": -1.5, "away": 1.5 },
+      "moneyline": { "home": -130, "away": 110 },
+      "total": 6.5
+    }
+  ]
+}
