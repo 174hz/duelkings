@@ -157,10 +157,22 @@ async function loadPools() {
     const now = Date.now();
 
     allPools.forEach(pool => {
-      const deadlineTime = new Date(pool.deadline).getTime();
-      if (deadlineTime < now && pool.status === "open") {
-        pool.status = "closed";
-      }
+     const deadlineTime = new Date(pool.deadline).getTime();
+if (deadlineTime < now && pool.status === "open") {
+  pool.status = "closed";
+}
+
+// TEMPORARILY DISABLED FOR TESTING
+/*
+const poolResults = resultsData[pool.id];
+if (poolResults) {
+  const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
+  if (allGamesScored) {
+    pool.status = "completed";
+  }
+}
+*/
+
 
       const poolResults = resultsData[pool.id];
       if (poolResults) {
