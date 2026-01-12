@@ -6,7 +6,7 @@
       "sport": "nfl",
       "label": "NFL Week 1 Main Pool",
       "status": "open",
-      "deadline": "2026-11-10T17:00:00Z",
+      "deadline": "2030-11-10T17:00:00Z",
       "games": [
         {
           "id": "buf-nyj",
@@ -25,7 +25,7 @@
         },
         {
           "id": "dal-phi",
-          "startTime": "2026-11-10T20:25:00Z",
+          "startTime": "2030-11-10T20:25:00Z",
           "homeTeam": "Philadelphia Eagles",
           "awayTeam": "Dallas Cowboys",
           "spread": {
@@ -45,7 +45,7 @@
       "sport": "nhl",
       "label": "NHL Saturday Night Picks",
       "status": "open",
-      "deadline": "2026-11-17T23:00:00Z",
+      "deadline": "2030-11-17T23:00:00Z",
       "games": [
         {
           "id": "tor-mtl",
@@ -64,7 +64,7 @@
         },
         {
           "id": "chi-bos",
-          "startTime": "2026-11-18T00:00:00Z",
+          "startTime": "2030-11-18T00:00:00Z",
           "homeTeam": "Boston Bruins",
           "awayTeam": "Chicago Blackhawks",
           "spread": {
@@ -88,7 +88,7 @@
       "games": [
         {
           "id": "lal-gsw",
-          "startTime": "2026-11-06T00:00:00Z",
+          "startTime": "2030-11-06T00:00:00Z",
           "homeTeam": "Golden State Warriors",
           "awayTeam": "Los Angeles Lakers",
           "spread": {
@@ -103,7 +103,7 @@
         },
         {
           "id": "bos-mia",
-          "startTime": "2026-11-06T01:30:00Z",
+          "startTime": "2030-11-06T01:30:00Z",
           "homeTeam": "Miami Heat",
           "awayTeam": "Boston Celtics",
           "spread": {
@@ -123,11 +123,11 @@
       "sport": "mlb",
       "label": "MLB Sunday Picks",
       "status": "open",
-      "deadline": "2026-11-12T17:00:00Z",
+      "deadline": "2030-11-12T17:00:00Z",
       "games": [
         {
           "id": "nyy-bos",
-          "startTime": "2026-11-12T17:00:00Z",
+          "startTime": "2030-11-12T17:00:00Z",
           "homeTeam": "Boston Red Sox",
           "awayTeam": "New York Yankees",
           "spread": {
@@ -142,7 +142,7 @@
         },
         {
           "id": "lad-sf",
-          "startTime": "2026-11-12T20:00:00Z",
+          "startTime": "2030-11-12T20:00:00Z",
           "homeTeam": "San Francisco Giants",
           "awayTeam": "Los Angeles Dodgers",
           "spread": {
