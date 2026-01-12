@@ -246,9 +246,14 @@ function renderPool(pool) {
 
   gamesContainer.innerHTML = "";
 
-  if (pool.status !== "open") {
-    gamesContainer.innerHTML = `<div class="matchup-card">Pool is ${pool.status}. Picks are locked.</div>`;
-    return;
+  const isOpen = pool.status === "open";
+
+  // Show locked/completed message when not open, but still render games
+  if (!isOpen) {
+    const lockedMsg = document.createElement("div");
+    lockedMsg.className = "matchup-card";
+    lockedMsg.textContent = `Pool is ${pool.status}. Picks are locked.`;
+    gamesContainer.appendChild(lockedMsg);
   }
 
   const poolPicks = userPicks[pool.id] || {};
@@ -309,7 +314,18 @@ function renderPool(pool) {
     `;
 
     applyExistingSelections(card, gamePicks);
-    attachSelectionHandlers(card, pool.id, game.id);
+
+    // Only allow new selections if pool is open
+    if (isOpen) {
+      attachSelectionHandlers(card, pool.id, game.id);
+    } else {
+      // Optional: visually indicate locked buttons
+      const buttons = card.querySelectorAll(".odds-btn");
+      buttons.forEach(b => {
+        b.classList.add("locked");
+        b.disabled = true;
+      });
+    }
 
     gamesContainer.appendChild(card);
   });
