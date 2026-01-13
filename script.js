@@ -154,37 +154,31 @@ async function loadPools() {
     allPools = poolsData.pools;
     allResults = resultsData;
 
-   const now = Date.now();
+    const now = Date.now();
 
-/* --------------------------------------------------
-   PATCHED BLOCK (A‑1 SAFE VERSION)
--------------------------------------------------- */
-allPools.forEach(pool => {
-  const deadlineTime = new Date(pool.deadline).getTime();
+    /* --------------------------------------------------
+       PATCHED BLOCK — OPTION B (deadline = first game start)
+    -------------------------------------------------- */
+    allPools.forEach(pool => {
+      // NEW: deadline is the earliest game start time
+      const earliestGameStart = Math.min(
+        ...pool.games.map(g => new Date(g.startTime).getTime())
+      );
 
-  // Close pool if deadline passed
-  if (deadlineTime < now && pool.status === "open") {
-    pool.status = "closed";
-  }
+      // Close pool only when the first game begins
+      if (earliestGameStart < now && pool.status === "open") {
+        pool.status = "closed";
+      }
 
-  // Mark completed only if all games scored
-  const poolResults = resultsData[pool.id];
-  if (poolResults) {
-    const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
-    if (allGamesScored) {
-      pool.status = "completed";
-    }
-  }
-
-  // 🔥 NEW: Refresh UI only for the currently selected pool
-  if (currentPool && currentPool.id === pool.id) {
-    renderPool(pool);
-  }
-});
-
-
-    // SAFE: Do NOT call setCurrentPool(currentPool) here
-    // currentPool is not assigned yet
+      // Mark completed only if all games scored
+      const poolResults = resultsData[pool.id];
+      if (poolResults) {
+        const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
+        if (allGamesScored) {
+          pool.status = "completed";
+        }
+      }
+    });
 
     const defaultPool =
       allPools.find(p => p.id === poolsData.currentPoolId) || allPools[0];
