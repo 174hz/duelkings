@@ -164,6 +164,37 @@ body {
 }
 
 /* --------------------------------------------------
+   DEV TOOLS (TEST MODE + DEBUG PANEL)
+-------------------------------------------------- */
+
+.dk-dev-tools {
+  background: var(--dk-surface);
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--dk-border);
+}
+
+.dk-toggle {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.debug-panel {
+  margin-top: 10px;
+  padding: 10px;
+  background: #111;
+  color: #0f0;
+  font-family: monospace;
+  font-size: 13px;
+  border-radius: 6px;
+  white-space: pre-line;
+}
+
+/* --------------------------------------------------
    POOL HEADER
 -------------------------------------------------- */
 
