@@ -156,24 +156,24 @@ async function loadPools() {
 
     const now = Date.now();
 
-  allPools.forEach(pool => {
-  const deadlineTime = new Date(pool.deadline).getTime();
+    // PATCHED BLOCK (Option A)
+    allPools.forEach(pool => {
+      const deadlineTime = new Date(pool.deadline).getTime();
 
-  // 1. Close pool if deadline has passed
-  if (deadlineTime < now && pool.status === "open") {
-    pool.status = "closed";
-  }
+      if (deadlineTime < now && pool.status === "open") {
+        pool.status = "closed";
+      }
 
-  // 2. Mark as completed only if all games are scored
-  const poolResults = resultsData[pool.id];
-  if (poolResults) {
-    const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
-    if (allGamesScored) {
-      pool.status = "completed";
-    }
-  }
-});
+      const poolResults = resultsData[pool.id];
+      if (poolResults) {
+        const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
+        if (allGamesScored) {
+          pool.status = "completed";
+        }
+      }
+    });
 
+    // (No setCurrentPool here — currentPool not assigned yet)
 
     const defaultPool =
       allPools.find(p => p.id === poolsData.currentPoolId) || allPools[0];
@@ -252,7 +252,6 @@ function renderPool(pool) {
 
   const isOpen = pool.status === "open";
 
-  // Show locked/completed message when not open, but still render games
   if (!isOpen) {
     const lockedMsg = document.createElement("div");
     lockedMsg.className = "matchup-card";
@@ -319,11 +318,9 @@ function renderPool(pool) {
 
     applyExistingSelections(card, gamePicks);
 
-    // Only allow new selections if pool is open
     if (isOpen) {
       attachSelectionHandlers(card, pool.id, game.id);
     } else {
-      // Optional: visually indicate locked buttons
       const buttons = card.querySelectorAll(".odds-btn");
       buttons.forEach(b => {
         b.classList.add("locked");
@@ -502,4 +499,3 @@ function renderLeaderboard(rows) {
     container.appendChild(div);
   });
 }
-
