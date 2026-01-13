@@ -138,7 +138,7 @@ function saveLocalPicks() {
 
 /* --------------------------------------------------
    LOAD POOLS + MULTI-SPORT SELECTORS
-   + AUTO-CLOSE / AUTO-COMPLETE
+   + TEST MODE: FORCE ALL POOLS OPEN
 -------------------------------------------------- */
 
 async function loadPools() {
@@ -154,23 +154,14 @@ async function loadPools() {
     allPools = poolsData.pools;
     allResults = resultsData;
 
-    const now = Date.now();
-
     /* --------------------------------------------------
-       PATCHED BLOCK — OPTION B (deadline = first game start)
+       TEST MODE — FORCE ALL POOLS OPEN
     -------------------------------------------------- */
     allPools.forEach(pool => {
-      // NEW: deadline is the earliest game start time
-      const earliestGameStart = Math.min(
-        ...pool.games.map(g => new Date(g.startTime).getTime())
-      );
+      // Always open for testing
+      pool.status = "open";
 
-      // Close pool only when the first game begins
-      if (earliestGameStart < now && pool.status === "open") {
-        pool.status = "closed";
-      }
-
-      // Mark completed only if all games scored
+      // Still allow completed pools to show correctly
       const poolResults = resultsData[pool.id];
       if (poolResults) {
         const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
@@ -323,15 +314,8 @@ function renderPool(pool) {
 
     applyExistingSelections(card, gamePicks);
 
-    if (isOpen) {
-      attachSelectionHandlers(card, pool.id, game.id);
-    } else {
-      const buttons = card.querySelectorAll(".odds-btn");
-      buttons.forEach(b => {
-        b.classList.add("locked");
-        b.disabled = true;
-      });
-    }
+    // ALWAYS allow clicking in test mode
+    attachSelectionHandlers(card, pool.id, game.id);
 
     gamesContainer.appendChild(card);
   });
@@ -504,3 +488,4 @@ function renderLeaderboard(rows) {
     container.appendChild(div);
   });
 }
+
