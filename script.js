@@ -156,32 +156,24 @@ async function loadPools() {
 
     const now = Date.now();
 
-    allPools.forEach(pool => {
-     const deadlineTime = new Date(pool.deadline).getTime();
-if (deadlineTime < now && pool.status === "open") {
-  pool.status = "closed";
-}
+  allPools.forEach(pool => {
+  const deadlineTime = new Date(pool.deadline).getTime();
 
-// TEMPORARILY DISABLED FOR TESTING
-/*
-const poolResults = resultsData[pool.id];
-if (poolResults) {
-  const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
-  if (allGamesScored) {
-    pool.status = "completed";
+  // 1. Close pool if deadline has passed
+  if (deadlineTime < now && pool.status === "open") {
+    pool.status = "closed";
   }
-}
-*/
 
+  // 2. Mark as completed only if all games are scored
+  const poolResults = resultsData[pool.id];
+  if (poolResults) {
+    const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
+    if (allGamesScored) {
+      pool.status = "completed";
+    }
+  }
+});
 
-      const poolResults = resultsData[pool.id];
-      if (poolResults) {
-        const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
-        if (allGamesScored) {
-          pool.status = "completed";
-        }
-      }
-    });
 
     const defaultPool =
       allPools.find(p => p.id === poolsData.currentPoolId) || allPools[0];
