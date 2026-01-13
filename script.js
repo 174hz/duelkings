@@ -156,14 +156,18 @@ async function loadPools() {
 
     const now = Date.now();
 
-    // PATCHED BLOCK (Option A)
+    /* --------------------------------------------------
+       PATCHED BLOCK (A‑1 SAFE VERSION)
+    -------------------------------------------------- */
     allPools.forEach(pool => {
       const deadlineTime = new Date(pool.deadline).getTime();
 
+      // Close pool if deadline passed
       if (deadlineTime < now && pool.status === "open") {
         pool.status = "closed";
       }
 
+      // Mark completed only if all games scored
       const poolResults = resultsData[pool.id];
       if (poolResults) {
         const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
@@ -173,7 +177,8 @@ async function loadPools() {
       }
     });
 
-    // (No setCurrentPool here — currentPool not assigned yet)
+    // SAFE: Do NOT call setCurrentPool(currentPool) here
+    // currentPool is not assigned yet
 
     const defaultPool =
       allPools.find(p => p.id === poolsData.currentPoolId) || allPools[0];
