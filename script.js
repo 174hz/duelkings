@@ -1,4 +1,9 @@
 /* --------------------------------------------------
+   GLOBAL FLAGS
+-------------------------------------------------- */
+let TEST_MODE = false;
+
+/* --------------------------------------------------
    DYNAMIC PATH RESOLUTION
 -------------------------------------------------- */
 
@@ -27,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initLogin();
   setupNav();
+  setupTestModeToggle();
   loadLocalPicks();
   loadPools();
   setupSaveButton();
@@ -35,6 +41,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeBtn = document.getElementById("theme-toggle");
   if (themeBtn) themeBtn.addEventListener("click", toggleTheme);
 });
+
+/* --------------------------------------------------
+   TEST MODE TOGGLE + DEBUG PANEL
+-------------------------------------------------- */
+
+function setupTestModeToggle() {
+  const toggle = document.getElementById("test-mode-toggle");
+  const debugPanel = document.getElementById("debug-panel");
+
+  toggle.addEventListener("change", () => {
+    TEST_MODE = toggle.checked;
+
+    if (TEST_MODE) {
+      debugPanel.classList.add("debug-open");
+      debugPanel.classList.remove("debug-closed");
+    } else {
+      debugPanel.classList.add("debug-closed");
+      debugPanel.classList.remove("debug-open");
+    }
+
+    loadPools();
+  });
+}
+
+function updateDebugPanel() {
+  const panel = document.getElementById("debug-panel");
+  if (!TEST_MODE) return;
+
+  const now = new Date().toLocaleString();
+
+  const lines = allPools.map(pool => {
+    return `${pool.id}
+  status: ${pool.status}
+  deadline: ${pool.deadline}
+  now: ${now}
+  `;
+  });
+
+  panel.textContent = "DEBUG MODE ACTIVE\n\n" + lines.join("\n");
+}
 
 /* --------------------------------------------------
    LOGIN SYSTEM (INLINE)
@@ -137,8 +183,7 @@ function saveLocalPicks() {
 }
 
 /* --------------------------------------------------
-   LOAD POOLS + MULTI-SPORT SELECTORS
-   + TEST MODE: FORCE ALL POOLS OPEN
+   LOAD POOLS (REAL MODE + TEST MODE)
 -------------------------------------------------- */
 
 async function loadPools() {
@@ -154,14 +199,18 @@ async function loadPools() {
     allPools = poolsData.pools;
     allResults = resultsData;
 
-    /* --------------------------------------------------
-       TEST MODE — FORCE ALL POOLS OPEN
-    -------------------------------------------------- */
-    allPools.forEach(pool => {
-      // Always open for testing
-      pool.status = "open";
+    const now = Date.now();
 
-      // Still allow completed pools to show correctly
+    allPools.forEach(pool => {
+      if (TEST_MODE) {
+        pool.status = "open";
+      } else {
+        const deadlineTime = new Date(pool.deadline).getTime();
+        if (deadlineTime < now && pool.status === "open") {
+          pool.status = "closed";
+        }
+      }
+
       const poolResults = resultsData[pool.id];
       if (poolResults) {
         const allGamesScored = pool.games.every(g => !!poolResults[g.id]);
@@ -170,6 +219,8 @@ async function loadPools() {
         }
       }
     });
+
+    updateDebugPanel();
 
     const defaultPool =
       allPools.find(p => p.id === poolsData.currentPoolId) || allPools[0];
@@ -180,6 +231,10 @@ async function loadPools() {
     console.error("Failed to load pools", e);
   }
 }
+
+/* --------------------------------------------------
+   POOL SELECTORS
+-------------------------------------------------- */
 
 function setupPoolSelectors(selectedPool) {
   const sportSelect = document.getElementById("sport-filter");
@@ -224,12 +279,6 @@ function setupPoolSelectors(selectedPool) {
   renderPoolOptions();
 }
 
-function setCurrentPool(pool) {
-  if (!pool) return;
-  currentPool = pool;
-  renderPool(pool);
-}
-
 /* --------------------------------------------------
    RENDER POOL + MATCHUPS
 -------------------------------------------------- */
@@ -248,7 +297,27 @@ function renderPool(pool) {
 
   const isOpen = pool.status === "open";
 
-  if (!isOpen) {
+  /* STATUS BADGE */
+  const badge = document.createElement("div");
+  badge.className = "pool-status-badge";
+
+  if (TEST_MODE) {
+    badge.classList.add("badge-test");
+    badge.textContent = "TEST MODE — OPEN";
+  } else if (pool.status === "completed") {
+    badge.classList.add("badge-completed");
+    badge.textContent = "COMPLETED";
+  } else if (pool.status === "closed") {
+    badge.classList.add("badge-closed");
+    badge.textContent = "CLOSED";
+  } else {
+    badge.classList.add("badge-open");
+    badge.textContent = "OPEN";
+  }
+
+  gamesContainer.appendChild(badge);
+
+  if (!isOpen && !TEST_MODE) {
     const lockedMsg = document.createElement("div");
     lockedMsg.className = "matchup-card";
     lockedMsg.textContent = `Pool is ${pool.status}. Picks are locked.`;
@@ -269,223 +338,3 @@ function renderPool(pool) {
         <span>${new Date(game.startTime).toLocaleString()}</span>
         <span>${pool.sport}</span>
       </div>
-
-      <div class="teams">
-        <div class="team">
-          <span class="team-name">${game.awayTeam}</span>
-          <span class="team-tag">Away</span>
-        </div>
-        <div class="team">
-          <span class="team-name">${game.homeTeam}</span>
-          <span class="team-tag">Home</span>
-        </div>
-      </div>
-
-      <div class="odds-row">
-        <button class="odds-btn" data-type="spread" data-choice="away">
-          <span class="odds-btn-label">${game.awayTeam} spread</span>
-          <span class="odds-btn-value">${game.spread.away}</span>
-        </button>
-        <button class="odds-btn" data-type="moneyline" data-choice="away">
-          <span class="odds-btn-label">${game.awayTeam} ML</span>
-          <span class="odds-btn-value">${game.moneyline.away}</span>
-        </button>
-        <button class="odds-btn" data-type="total" data-choice="over">
-          <span class="odds-btn-label">Over</span>
-          <span class="odds-btn-value">${game.total}</span>
-        </button>
-      </div>
-
-      <div class="odds-row" style="margin-top:6px;">
-        <button class="odds-btn" data-type="spread" data-choice="home">
-          <span class="odds-btn-label">${game.homeTeam} spread</span>
-          <span class="odds-btn-value">${game.spread.home}</span>
-        </button>
-        <button class="odds-btn" data-type="moneyline" data-choice="home">
-          <span class="odds-btn-label">${game.homeTeam} ML</span>
-          <span class="odds-btn-value">${game.moneyline.home}</span>
-        </button>
-        <button class="odds-btn" data-type="total" data-choice="under">
-          <span class="odds-btn-label">Under</span>
-          <span class="odds-btn-value">${game.total}</span>
-        </button>
-      </div>
-    `;
-
-    applyExistingSelections(card, gamePicks);
-
-    // ALWAYS allow clicking in test mode
-    attachSelectionHandlers(card, pool.id, game.id);
-
-    gamesContainer.appendChild(card);
-  });
-}
-
-function applyExistingSelections(card, gamePicks) {
-  Object.entries(gamePicks).forEach(([type, choice]) => {
-    const btn = card.querySelector(
-      `.odds-btn[data-type="${type}"][data-choice="${choice}"]`
-    );
-    if (btn) btn.classList.add("selected");
-  });
-}
-
-function attachSelectionHandlers(card, poolId, gameId) {
-  const buttons = card.querySelectorAll(".odds-btn");
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const type = btn.dataset.type;
-      const choice = btn.dataset.choice;
-
-      buttons.forEach(b => {
-        if (b.dataset.type === type) b.classList.remove("selected");
-      });
-      btn.classList.add("selected");
-
-      if (!userPicks[poolId]) userPicks[poolId] = {};
-      if (!userPicks[poolId][gameId]) userPicks[poolId][gameId] = {};
-      userPicks[poolId][gameId][type] = choice;
-    });
-  });
-}
-
-/* --------------------------------------------------
-   SAVE PICKS
--------------------------------------------------- */
-
-function setupSaveButton() {
-  const btn = document.getElementById("save-picks-btn");
-  const statusEl = document.getElementById("save-status");
-
-  btn.addEventListener("click", () => {
-    saveLocalPicks();
-    statusEl.textContent = "Picks saved on this device.";
-    setTimeout(() => (statusEl.textContent = ""), 2500);
-  });
-}
-
-/* --------------------------------------------------
-   SUBMIT PICKS → JSON ENTRY GENERATOR
--------------------------------------------------- */
-
-function setupSubmitButton() {
-  const btn = document.getElementById("submit-picks-btn");
-  const out = document.getElementById("submit-output");
-
-  btn.addEventListener("click", () => {
-    const user = localStorage.getItem(USER_KEY);
-    if (!user) {
-      out.textContent = "You must log in first.";
-      return;
-    }
-
-    const poolId = currentPool.id;
-    const picks = userPicks[poolId];
-
-    if (!picks) {
-      out.textContent = "No picks made.";
-      return;
-    }
-
-    const entry = {
-      user,
-      picks
-    };
-
-    out.textContent =
-      "Copy this into data/entries.json:\n\n" +
-      JSON.stringify(entry, null, 2);
-  });
-}
-
-/* --------------------------------------------------
-   SCORING LOGIC
--------------------------------------------------- */
-
-function evaluateGameResult(game, result) {
-  const { homeScore, awayScore } = result;
-
-  const homeWin = homeScore > awayScore;
-  const totalPoints = homeScore + awayScore;
-
-  return {
-    moneylineWinner: homeWin ? "home" : "away",
-    spreadWinner:
-      homeScore + game.spread.home > awayScore + game.spread.away
-        ? "home"
-        : "away",
-    totalWinner:
-      totalPoints > game.total
-        ? "over"
-        : totalPoints < game.total
-        ? "under"
-        : "push"
-  };
-}
-
-function scoreUserPicks(pool, userEntry, results) {
-  let score = 0;
-
-  for (const game of pool.games) {
-    const gameId = game.id;
-    const picks = userEntry.picks[gameId];
-    const result = results[gameId];
-
-    if (!picks || !result) continue;
-
-    const evalResult = evaluateGameResult(game, result);
-
-    if (picks.moneyline === evalResult.moneylineWinner) score++;
-    if (picks.spread === evalResult.spreadWinner) score++;
-    if (picks.total === evalResult.totalWinner) score++;
-  }
-
-  return score;
-}
-
-/* --------------------------------------------------
-   LEADERBOARD
--------------------------------------------------- */
-
-async function loadLeaderboard() {
-  try {
-    const poolsRes = await fetch(POOLS_URL + "?v=" + Date.now());
-    const poolsData = await poolsRes.json();
-    const pool = poolsData.pools.find(p => p.id === poolsData.currentPoolId);
-
-    const resultsRes = await fetch(RESULTS_URL + "?v=" + Date.now());
-    const resultsData = await resultsRes.json();
-    const poolResults = resultsData[pool.id];
-
-    const entriesRes = await fetch(ENTRIES_URL + "?v=" + Date.now());
-    const entriesData = await entriesRes.json();
-    const entries = entriesData[pool.id];
-
-    const leaderboard = entries
-      .map(entry => ({
-        user: entry.user,
-        score: scoreUserPicks(pool, entry, poolResults)
-      }))
-      .sort((a, b) => b.score - a.score);
-
-    renderLeaderboard(leaderboard);
-  } catch (e) {
-    console.error("Leaderboard error", e);
-  }
-}
-
-function renderLeaderboard(rows) {
-  const container = document.getElementById("leaderboard-container");
-  container.innerHTML = "";
-
-  rows.forEach(row => {
-    const div = document.createElement("div");
-    div.className = "leaderboard-row";
-    div.innerHTML = `
-      <span>${row.user}</span>
-      <span>${row.score}</span>
-    `;
-    container.appendChild(div);
-  });
-}
-
