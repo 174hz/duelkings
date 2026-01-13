@@ -13,7 +13,6 @@
     <div class="dk-header-left">
       <div class="dk-logo">
         <img src="duelkings-logo.svg" />
-
       </div>
 
       <nav class="dk-nav">
@@ -34,6 +33,16 @@
 
   <!-- MAIN -->
   <main class="dk-main">
+
+    <!-- TEST MODE TOGGLE + DEBUG PANEL -->
+    <div id="dk-dev-tools" class="dk-dev-tools">
+      <label class="dk-toggle">
+        <input type="checkbox" id="test-mode-toggle">
+        <span>Test Mode (force pools open)</span>
+      </label>
+
+      <div id="debug-panel" class="debug-panel" style="display:none;"></div>
+    </div>
 
     <!-- POOLS VIEW -->
     <section id="pools-view" class="view active">
