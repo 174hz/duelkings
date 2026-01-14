@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNav();
   setupTestModeToggle();
   loadLocalPicks();
-  showSkeletons();
   loadPools();
   setupSaveButton();
   setupSubmitButton();
@@ -42,27 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeBtn = document.getElementById("theme-toggle");
   if (themeBtn) themeBtn.addEventListener("click", toggleTheme);
 });
-
-/* --------------------------------------------------
-   SKELETON LOADER
--------------------------------------------------- */
-
-function showSkeletons() {
-  const container = document.getElementById("games-container");
-  if (!container) return;
-
-  container.innerHTML = "";
-  for (let i = 0; i < 3; i++) {
-    const sk = document.createElement("div");
-    sk.className = "skeleton-card";
-    sk.innerHTML = `
-      <div class="skeleton-line" style="width: 40%"></div>
-      <div class="skeleton-line" style="width: 70%"></div>
-      <div class="skeleton-line" style="width: 60%"></div>
-    `;
-    container.appendChild(sk);
-  }
-}
 
 /* --------------------------------------------------
    TEST MODE TOGGLE + DEBUG PANEL
@@ -83,7 +61,6 @@ function setupTestModeToggle() {
       debugPanel.classList.remove("debug-open");
     }
 
-    showSkeletons();
     loadPools();
   });
 }
@@ -324,7 +301,7 @@ function setupPoolSelectors(selectedPool) {
 }
 
 /* --------------------------------------------------
-   RENDER POOL + MATCHUPS (WITH FLIP)
+   RENDER POOL + MATCHUPS
 -------------------------------------------------- */
 
 function renderPool(pool) {
@@ -379,7 +356,11 @@ function renderPool(pool) {
     const gamePicks = poolPicks[game.id] || {};
     const result = poolResults[game.id];
 
-    const frontHtml = `
+    const resultTag = result
+      ? `Final: ${result.awayScore}–${result.homeScore}`
+      : "No final score yet";
+
+    card.innerHTML = `
       <div class="matchup-header">
         <span>${new Date(game.startTime).toLocaleString()}</span>
         <span>${pool.sport}</span>
@@ -394,6 +375,11 @@ function renderPool(pool) {
           <span class="team-name">${game.homeTeam}</span>
           <span class="team-tag">Home</span>
         </div>
+      </div>
+
+      <div class="matchup-header">
+        <span>${resultTag}</span>
+        <span>Status: ${pool.status}</span>
       </div>
 
       <div class="odds-row">
@@ -426,46 +412,6 @@ function renderPool(pool) {
         </button>
       </div>
     `;
-
-    const backHtml = result
-      ? `
-        <div>
-          <div class="matchup-header">
-            <span>Final score</span>
-            <span>${pool.sport}</span>
-          </div>
-          <div class="teams">
-            <div class="team">
-              <span class="team-name">${game.awayTeam}</span>
-              <span class="team-tag">${result.awayScore}</span>
-            </div>
-            <div class="team">
-              <span class="team-name">${game.homeTeam}</span>
-              <span class="team-tag">${result.homeScore}</span>
-            </div>
-          </div>
-        </div>
-      `
-      : `
-        <div class="matchup-header">
-          <span>Results pending</span>
-        </div>
-      `;
-
-    card.innerHTML = `
-      <div class="matchup-inner">
-        <div class="matchup-front">
-          ${frontHtml}
-        </div>
-        <div class="matchup-back">
-          ${backHtml}
-        </div>
-      </div>
-    `;
-
-    if (pool.status === "completed") {
-      card.classList.add("completed");
-    }
 
     applyExistingSelections(card, gamePicks);
 
