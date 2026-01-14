@@ -301,7 +301,7 @@ function setupPoolSelectors(selectedPool) {
 }
 
 /* --------------------------------------------------
-   RENDER POOL — ULTRA‑COMPACT ESPN GEOMETRY
+   RENDER POOL — COMPACT ONE-LINE LAYOUT
 -------------------------------------------------- */
 
 function renderPool(pool) {
@@ -318,78 +318,124 @@ function renderPool(pool) {
 
   const isOpen = pool.status === "open";
   const poolResults = allResults[pool.id] || {};
-
   const poolPicks = userPicks[pool.id] || {};
 
   pool.games.forEach(game => {
-    const row = document.createElement("div");
-    row.className = "game-row";
-    row.dataset.gameId = game.id;
+    const card = document.createElement("div");
+    card.className = "matchup-card compact";
+    card.dataset.gameId = game.id;
 
     const gamePicks = poolPicks[game.id] || {};
-    const result = poolResults[game.id];
+    const result = poolResults[game.id]; // not shown here, but kept for future use
 
-    const finalScore = result
-      ? `${result.awayScore}–${result.homeScore}`
-      : "";
+    card.innerHTML = `
+      <div class="matchup-header compact-header">
+        <span>${new Date(game.startTime).toLocaleString()}</span>
+        <span>${pool.sport}</span>
+      </div>
 
-    row.innerHTML = `
-      <div class="team away">${game.awayTeam}</div>
-      <button class="pill spread" data-type="spread" data-choice="away">${game.spread.away}</button>
+      <div class="compact-row">
+        <span class="team-label away-team"><strong>${game.awayTeam}</strong></span>
+        <button class="odds-btn" data-type="spread" data-choice="away">
+          <span class="odds-btn-value">${game.spread.away}</span>
+        </button>
 
-      <div class="team home">${game.homeTeam}</div>
-      <button class="pill spread" data-type="spread" data-choice="home">${game.spread.home}</button>
+        <span class="team-label home-team"><strong>${game.homeTeam}</strong></span>
+        <button class="odds-btn" data-type="spread" data-choice="home">
+          <span class="odds-btn-value">${game.spread.home}</span>
+        </button>
 
-      <button class="pill moneyline" data-type="moneyline" data-choice="away">${game.moneyline.away}</button>
-      <button class="pill moneyline" data-type="moneyline" data-choice="home">${game.moneyline.home}</button>
+        <button class="odds-btn" data-type="moneyline" data-choice="away">
+          <span class="odds-btn-value">${game.moneyline.away}</span>
+        </button>
+        <button class="odds-btn" data-type="moneyline" data-choice="home">
+          <span class="odds-btn-value">${game.moneyline.home}</span>
+        </button>
 
-      <button class="pill total" data-type="total" data-choice="over">O${game.total}</button>
-      <button class="pill total" data-type="total" data-choice="under">U${game.total}</button>
-
-      <div class="final-score">${finalScore}</div>
+        <button class="odds-btn" data-type="total" data-choice="over">
+          <span class="odds-btn-label">O</span>
+          <span class="odds-btn-value">${game.total}</span>
+        </button>
+        <button class="odds-btn" data-type="total" data-choice="under">
+          <span class="odds-btn-label">U</span>
+          <span class="odds-btn-value">${game.total}</span>
+        </button>
+      </div>
     `;
 
-    applyExistingSelections(row, gamePicks);
+    applyExistingSelections(card, gamePicks);
 
     if (isOpen || TEST_MODE) {
-      attachSelectionHandlers(row, pool.id, game.id);
+      attachSelectionHandlers(card, pool.id, game.id);
     } else {
-      row.querySelectorAll(".pill").forEach(b => {
+      const buttons = card.querySelectorAll(".odds-btn");
+      buttons.forEach(b => {
         b.classList.add("locked");
         b.disabled = true;
       });
     }
 
-    gamesContainer.appendChild(row);
+    gamesContainer.appendChild(card);
+    requestAnimationFrame(() => card.classList.add("loaded"));
   });
 }
 
-function applyExistingSelections(row, gamePicks) {
+/* --------------------------------------------------
+   SELECTION STATE HELPERS
+-------------------------------------------------- */
+
+function applyExistingSelections(card, gamePicks) {
   Object.entries(gamePicks).forEach(([type, choice]) => {
-    const btn = row.querySelector(
-      `.pill[data-type="${type}"][data-choice="${choice}"]`
+    const btn = card.querySelector(
+      `.odds-btn[data-type="${type}"][data-choice="${choice}"]`
     );
     if (btn) btn.classList.add("selected");
   });
 }
 
-function attachSelectionHandlers(row, poolId, gameId) {
-  const buttons = row.querySelectorAll(".pill");
+function attachSelectionHandlers(card, poolId, gameId) {
+  const buttons = card.querySelectorAll(".odds-btn");
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
       const type = btn.dataset.type;
       const choice = btn.dataset.choice;
 
+      // Clear previous selection for this type
       buttons.forEach(b => {
         if (b.dataset.type === type) b.classList.remove("selected", "missing");
       });
 
+      // Select this button
       btn.classList.add("selected");
       btn.classList.remove("missing");
 
+      // Ensure pool/game structure exists
       if (!userPicks[poolId]) userPicks[poolId] = {};
       if (!userPicks[poolId][gameId]) userPicks[poolId][gameId] = {};
+
+      // Save this pick
       userPicks[poolId][gameId][type] = choice;
+
+      // Auto-select moneyline when spread is chosen
+      if (type === "spread") {
+        const mlBtn = card.querySelector(
+          `.odds-btn[data-type="moneyline"][data-choice="${choice}"]`
+        );
+        if (mlBtn) {
+          // Clear previous ML selection
+          buttons.forEach(b => {
+            if (b.dataset.type === "moneyline") {
+              b.classList.remove("selected", "missing");
+            }
+          });
+          // Select matching ML
+          mlBtn.classList.add("selected");
+          mlBtn.classList.remove("missing");
+
+          // Save ML pick
+          userPicks[poolId][gameId].moneyline = choice;
+        }
+      }
     });
   });
 }
@@ -452,10 +498,10 @@ function setupSubmitButton() {
       if (missing.length > 0) {
         incompleteGames.push(gameId);
 
-        const row = document.querySelector(`.game-row[data-game-id="${gameId}"]`);
-        if (row) {
+        const card = document.querySelector(`.matchup-card[data-game-id="${gameId}"]`);
+        if (card) {
           missing.forEach(type => {
-            const btns = row.querySelectorAll(`.pill[data-type="${type}"]`);
+            const btns = card.querySelectorAll(`.odds-btn[data-type="${type}"]`);
             btns.forEach(b => b.classList.add("missing"));
           });
         }
@@ -567,3 +613,4 @@ function renderLeaderboard(rows) {
     container.appendChild(div);
   });
 }
+
