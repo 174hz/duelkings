@@ -249,12 +249,31 @@ body {
   gap: 12px;
 }
 
+/* ✨ NEW ANIMATIONS ADDED HERE ✨ */
 .matchup-card {
   background: var(--dk-surface);
   border-radius: var(--dk-radius);
   padding: 12px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
   border: 1px solid var(--dk-border);
+
+  /* Animation */
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.25s ease-out,
+    box-shadow 0.2s ease-out;
+}
+
+.matchup-card.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.matchup-card:hover {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
 }
 
 .matchup-header {
@@ -294,6 +313,7 @@ body {
   gap: 8px;
 }
 
+/* ✨ Odds button hover animation */
 .odds-btn {
   border-radius: 8px;
   border: 1px solid var(--dk-border);
@@ -305,6 +325,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.odds-btn:hover:not(.locked) {
+  transform: translateY(-1px);
 }
 
 .odds-btn-label {
@@ -349,9 +377,18 @@ body {
   background: #1d4ed8;
 }
 
-.save-status {
+/* ✨ Animated save/submit status */
+.save-status,
+#submit-output {
   font-size: 12px;
   color: var(--dk-text-muted);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.save-status.show,
+#submit-output.show {
+  opacity: 1;
 }
 
 /* --------------------------------------------------
@@ -391,3 +428,4 @@ body {
     padding: 14px;
   }
 }
+
