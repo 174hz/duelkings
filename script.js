@@ -301,7 +301,7 @@ function setupPoolSelectors(selectedPool) {
 }
 
 /* --------------------------------------------------
-   RENDER POOL + MATCHUPS
+   RENDER POOL — ULTRA‑COMPACT ESPN GEOMETRY
 -------------------------------------------------- */
 
 function renderPool(pool) {
@@ -319,128 +319,62 @@ function renderPool(pool) {
   const isOpen = pool.status === "open";
   const poolResults = allResults[pool.id] || {};
 
-  /* STATUS BADGE */
-  const badge = document.createElement("div");
-  badge.className = "pool-status-badge";
-
-  if (TEST_MODE) {
-    badge.classList.add("badge-test");
-    badge.textContent = "TEST MODE — OPEN";
-  } else if (pool.status === "completed") {
-    badge.classList.add("badge-completed");
-    badge.textContent = "COMPLETED";
-  } else if (pool.status === "closed") {
-    badge.classList.add("badge-closed");
-    badge.textContent = "CLOSED";
-  } else {
-    badge.classList.add("badge-open");
-    badge.textContent = "OPEN";
-  }
-
-  gamesContainer.appendChild(badge);
-
-  if (!isOpen && !TEST_MODE && pool.status !== "completed") {
-    const lockedMsg = document.createElement("div");
-    lockedMsg.className = "matchup-card";
-    lockedMsg.textContent = `Pool is ${pool.status}. Picks are locked.`;
-    gamesContainer.appendChild(lockedMsg);
-  }
-
   const poolPicks = userPicks[pool.id] || {};
 
   pool.games.forEach(game => {
-    const card = document.createElement("div");
-    card.className = "matchup-card";
-    card.dataset.gameId = game.id;
+    const row = document.createElement("div");
+    row.className = "game-row";
+    row.dataset.gameId = game.id;
 
     const gamePicks = poolPicks[game.id] || {};
     const result = poolResults[game.id];
 
-    const resultTag = result
-      ? `Final: ${result.awayScore}–${result.homeScore}`
-      : "No final score yet";
+    const finalScore = result
+      ? `${result.awayScore}–${result.homeScore}`
+      : "";
 
-    card.innerHTML = `
-      <div class="matchup-header">
-        <span>${new Date(game.startTime).toLocaleString()}</span>
-        <span>${pool.sport}</span>
-      </div>
+    row.innerHTML = `
+      <div class="team away">${game.awayTeam}</div>
+      <button class="pill spread" data-type="spread" data-choice="away">${game.spread.away}</button>
 
-      <div class="teams">
-        <div class="team">
-          <span class="team-name">${game.awayTeam}</span>
-          <span class="team-tag">Away</span>
-        </div>
-        <div class="team">
-          <span class="team-name">${game.homeTeam}</span>
-          <span class="team-tag">Home</span>
-        </div>
-      </div>
+      <div class="team home">${game.homeTeam}</div>
+      <button class="pill spread" data-type="spread" data-choice="home">${game.spread.home}</button>
 
-      <div class="matchup-header">
-        <span>${resultTag}</span>
-        <span>Status: ${pool.status}</span>
-      </div>
+      <button class="pill moneyline" data-type="moneyline" data-choice="away">${game.moneyline.away}</button>
+      <button class="pill moneyline" data-type="moneyline" data-choice="home">${game.moneyline.home}</button>
 
-      <div class="odds-row">
-        <button class="odds-btn" data-type="spread" data-choice="away">
-          <span class="odds-btn-label">${game.awayTeam} spread</span>
-          <span class="odds-btn-value">${game.spread.away}</span>
-        </button>
-        <button class="odds-btn" data-type="moneyline" data-choice="away">
-          <span class="odds-btn-label">${game.awayTeam} ML</span>
-          <span class="odds-btn-value">${game.moneyline.away}</span>
-        </button>
-        <button class="odds-btn" data-type="total" data-choice="over">
-          <span class="odds-btn-label">Over</span>
-          <span class="odds-btn-value">${game.total}</span>
-        </button>
-      </div>
+      <button class="pill total" data-type="total" data-choice="over">O${game.total}</button>
+      <button class="pill total" data-type="total" data-choice="under">U${game.total}</button>
 
-      <div class="odds-row" style="margin-top:6px;">
-        <button class="odds-btn" data-type="spread" data-choice="home">
-          <span class="odds-btn-label">${game.homeTeam} spread</span>
-          <span class="odds-btn-value">${game.spread.home}</span>
-        </button>
-        <button class="odds-btn" data-type="moneyline" data-choice="home">
-          <span class="odds-btn-label">${game.homeTeam} ML</span>
-          <span class="odds-btn-value">${game.moneyline.home}</span>
-        </button>
-        <button class="odds-btn" data-type="total" data-choice="under">
-          <span class="odds-btn-label">Under</span>
-          <span class="odds-btn-value">${game.total}</span>
-        </button>
-      </div>
+      <div class="final-score">${finalScore}</div>
     `;
 
-    applyExistingSelections(card, gamePicks);
+    applyExistingSelections(row, gamePicks);
 
     if (isOpen || TEST_MODE) {
-      attachSelectionHandlers(card, pool.id, game.id);
+      attachSelectionHandlers(row, pool.id, game.id);
     } else {
-      const buttons = card.querySelectorAll(".odds-btn");
-      buttons.forEach(b => {
+      row.querySelectorAll(".pill").forEach(b => {
         b.classList.add("locked");
         b.disabled = true;
       });
     }
 
-    gamesContainer.appendChild(card);
-    requestAnimationFrame(() => card.classList.add("loaded"));
+    gamesContainer.appendChild(row);
   });
 }
 
-function applyExistingSelections(card, gamePicks) {
+function applyExistingSelections(row, gamePicks) {
   Object.entries(gamePicks).forEach(([type, choice]) => {
-    const btn = card.querySelector(
-      `.odds-btn[data-type="${type}"][data-choice="${choice}"]`
+    const btn = row.querySelector(
+      `.pill[data-type="${type}"][data-choice="${choice}"]`
     );
     if (btn) btn.classList.add("selected");
   });
 }
 
-function attachSelectionHandlers(card, poolId, gameId) {
-  const buttons = card.querySelectorAll(".odds-btn");
+function attachSelectionHandlers(row, poolId, gameId) {
+  const buttons = row.querySelectorAll(".pill");
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
       const type = btn.dataset.type;
@@ -479,7 +413,7 @@ function setupSaveButton() {
 }
 
 /* --------------------------------------------------
-   SUBMIT PICKS → VALIDATION + JSON OUTPUT
+   SUBMIT PICKS — VALIDATION + JSON OUTPUT
 -------------------------------------------------- */
 
 function setupSubmitButton() {
@@ -518,10 +452,10 @@ function setupSubmitButton() {
       if (missing.length > 0) {
         incompleteGames.push(gameId);
 
-        const card = document.querySelector(`.matchup-card[data-game-id="${gameId}"]`);
-        if (card) {
+        const row = document.querySelector(`.game-row[data-game-id="${gameId}"]`);
+        if (row) {
           missing.forEach(type => {
-            const btns = card.querySelectorAll(`.odds-btn[data-type="${type}"]`);
+            const btns = row.querySelectorAll(`.pill[data-type="${type}"]`);
             btns.forEach(b => b.classList.add("missing"));
           });
         }
@@ -594,4 +528,42 @@ function scoreUserPicks(pool, userEntry, results) {
 
 async function loadLeaderboard() {
   try {
-    const poolsRes = await fetch
+    const poolsRes = await fetch(POOLS_URL + "?v=" + Date.now());
+    const poolsData = await poolsRes.json();
+    const pool = poolsData.pools.find(p => p.id === poolsData.currentPoolId);
+
+    const resultsRes = await fetch(RESULTS_URL + "?v=" + Date.now());
+    const resultsData = await resultsRes.json();
+    const poolResults = resultsData[pool.id];
+
+    const entriesRes = await fetch(ENTRIES_URL + "?v=" + Date.now());
+    const entriesData = await entriesRes.json();
+    const entries = entriesData[pool.id];
+
+    const leaderboard = entries
+      .map(entry => ({
+        user: entry.user,
+        score: scoreUserPicks(pool, entry, poolResults)
+      }))
+      .sort((a, b) => b.score - a.score);
+
+    renderLeaderboard(leaderboard);
+  } catch (e) {
+    console.error("Leaderboard error", e);
+  }
+}
+
+function renderLeaderboard(rows) {
+  const container = document.getElementById("leaderboard-container");
+  container.innerHTML = "";
+
+  rows.forEach(row => {
+    const div = document.createElement("div");
+    div.className = "leaderboard-row";
+    div.innerHTML = `
+      <span>${row.user}</span>
+      <span>${row.score}</span>
+    `;
+    container.appendChild(div);
+  });
+}
