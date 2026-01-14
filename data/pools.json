@@ -1,161 +1,325 @@
 {
-  "currentPoolId": "nfl-week1",
+  "currentPoolId": "nfl-week7-2027",
   "pools": [
     {
-      "id": "nfl-week1",
-      "sport": "nfl",
-      "label": "NFL Week 1 Main Pool",
+      "id": "nfl-week7-2027",
+      "sport": "NFL",
+      "label": "NFL Week 7 Main Pool",
+      "deadline": "2027-10-14T12:00:00",
       "status": "open",
-      "deadline": "2030-11-10T17:00:00Z",
       "games": [
         {
-          "id": "buf-nyj",
-          "startTime": "2026-11-10T17:00:00Z",
-          "homeTeam": "New York Jets",
-          "awayTeam": "Buffalo Bills",
-          "spread": {
-            "home": -3.5,
-            "away": 3.5
-          },
-          "moneyline": {
-            "home": -150,
-            "away": 130
-          },
+          "id": "nfl-w7-bengals-steelers",
+          "awayTeam": "Cincinnati Bengals",
+          "homeTeam": "Pittsburgh Steelers",
+          "startTime": "2027-10-14T20:15:00",
+          "spread": { "away": "+5.5", "home": "-5.5" },
+          "moneyline": { "away": "+195", "home": "-238" },
           "total": 44.5
         },
         {
-          "id": "dal-phi",
-          "startTime": "2030-11-10T20:25:00Z",
-          "homeTeam": "Philadelphia Eagles",
-          "awayTeam": "Dallas Cowboys",
-          "spread": {
-            "home": -2.5,
-            "away": 2.5
-          },
-          "moneyline": {
-            "home": -135,
-            "away": 115
-          },
-          "total": 47
+          "id": "nfl-w7-rams-jaguars",
+          "awayTeam": "Los Angeles Rams",
+          "homeTeam": "Jacksonville Jaguars",
+          "startTime": "2027-10-17T09:30:00",
+          "spread": { "away": "-3", "home": "+3" },
+          "moneyline": { "away": "-166", "home": "+140" },
+          "total": 44.5
+        },
+        {
+          "id": "nfl-w7-patriots-titans",
+          "awayTeam": "New England Patriots",
+          "homeTeam": "Tennessee Titans",
+          "startTime": "2027-10-17T13:00:00",
+          "spread": { "away": "-7", "home": "+7" },
+          "moneyline": { "away": "-355", "home": "+280" },
+          "total": 42.5
+        },
+        {
+          "id": "nfl-w7-eagles-vikings",
+          "awayTeam": "Philadelphia Eagles",
+          "homeTeam": "Minnesota Vikings",
+          "startTime": "2027-10-17T13:00:00",
+          "spread": { "away": "-1.5", "home": "+1.5" },
+          "moneyline": { "away": "-130", "home": "+110" },
+          "total": 43.5
+        },
+        {
+          "id": "nfl-w7-raiders-chiefs",
+          "awayTeam": "Las Vegas Raiders",
+          "homeTeam": "Kansas City Chiefs",
+          "startTime": "2027-10-17T16:25:00",
+          "spread": { "away": "+11.5", "home": "-11.5" },
+          "moneyline": { "away": "+550", "home": "-800" },
+          "total": 45.5
+        },
+        {
+          "id": "nfl-w7-panthers-jets",
+          "awayTeam": "Carolina Panthers",
+          "homeTeam": "New York Jets",
+          "startTime": "2027-10-17T13:00:00",
+          "spread": { "away": "-1.5", "home": "+1.5" },
+          "moneyline": { "away": "-118", "home": "-102" },
+          "total": 41.5
+        },
+        {
+          "id": "nfl-w7-dolphins-browns",
+          "awayTeam": "Miami Dolphins",
+          "homeTeam": "Cleveland Browns",
+          "startTime": "2027-10-17T13:00:00",
+          "spread": { "away": "+2.5", "home": "-2.5" },
+          "moneyline": { "away": "+120", "home": "-142" },
+          "total": 35.5
+        },
+        {
+          "id": "nfl-w7-saints-bears",
+          "awayTeam": "New Orleans Saints",
+          "homeTeam": "Chicago Bears",
+          "startTime": "2027-10-17T13:00:00",
+          "spread": { "away": "+3.5", "home": "-3.5" },
+          "moneyline": { "away": "+185", "home": "-225" },
+          "total": 45.5
+        },
+        {
+          "id": "nfl-w7-giants-broncos",
+          "awayTeam": "New York Giants",
+          "homeTeam": "Denver Broncos",
+          "startTime": "2027-10-17T16:05:00",
+          "spread": { "away": "+7", "home": "-7" },
+          "moneyline": { "away": "+295", "home": "-375" },
+          "total": 39.5
+        },
+        {
+          "id": "nfl-w7-colts-chargers",
+          "awayTeam": "Indianapolis Colts",
+          "homeTeam": "Los Angeles Chargers",
+          "startTime": "2027-10-17T16:25:00",
+          "spread": { "away": "+2.5", "home": "-2.5" },
+          "moneyline": { "away": "+105", "home": "-125" },
+          "total": 48.5
+        },
+        {
+          "id": "nfl-w7-packers-cardinals",
+          "awayTeam": "Green Bay Packers",
+          "homeTeam": "Arizona Cardinals",
+          "startTime": "2027-10-17T16:25:00",
+          "spread": { "away": "-7", "home": "+7" },
+          "moneyline": { "away": "-380", "home": "+300" },
+          "total": 44.5
+        },
+        {
+          "id": "nfl-w7-commanders-cowboys",
+          "awayTeam": "Washington Commanders",
+          "homeTeam": "Dallas Cowboys",
+          "startTime": "2027-10-17T20:20:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "-125", "home": "+105" },
+          "total": 53.5
+        },
+        {
+          "id": "nfl-w7-falcons-49ers",
+          "awayTeam": "Atlanta Falcons",
+          "homeTeam": "San Francisco 49ers",
+          "startTime": "2027-10-17T16:05:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "+114", "home": "-135" },
+          "total": 47.5
+        },
+        {
+          "id": "nfl-w7-buccaneers-lions",
+          "awayTeam": "Tampa Bay Buccaneers",
+          "homeTeam": "Detroit Lions",
+          "startTime": "2027-10-18T20:15:00",
+          "spread": { "away": "+6", "home": "-6" },
+          "moneyline": { "away": "+230", "home": "-285" },
+          "total": 52.5
+        },
+        {
+          "id": "nfl-w7-texans-seahawks",
+          "awayTeam": "Houston Texans",
+          "homeTeam": "Seattle Seahawks",
+          "startTime": "2027-10-17T16:25:00",
+          "spread": { "away": "+3", "home": "-3" },
+          "moneyline": { "away": "+140", "home": "-166" },
+          "total": 41.5
         }
       ]
     },
+
     {
-      "id": "nhl-saturday",
-      "sport": "nhl",
-      "label": "NHL Saturday Night Picks",
+      "id": "nba-full-slate-2027",
+      "sport": "NBA",
+      "label": "NBA Full Slate Demo Pool",
+      "deadline": "2027-01-12T16:00:00",
       "status": "open",
-      "deadline": "2030-11-17T23:00:00Z",
       "games": [
         {
-          "id": "tor-mtl",
-          "startTime": "2026-11-17T23:00:00Z",
-          "homeTeam": "Montreal Canadiens",
-          "awayTeam": "Toronto Maple Leafs",
-          "spread": {
-            "home": -1.5,
-            "away": 1.5
-          },
-          "moneyline": {
-            "home": -120,
-            "away": 105
-          },
+          "id": "nba-raptors-pacers",
+          "awayTeam": "Toronto Raptors",
+          "homeTeam": "Indiana Pacers",
+          "startTime": "2027-01-12T16:00:00",
+          "spread": { "away": "-2.5", "home": "+2.5" },
+          "moneyline": { "away": "-115", "home": "-105" },
+          "total": 221.5
+        },
+        {
+          "id": "nba-cavaliers-76ers",
+          "awayTeam": "Cleveland Cavaliers",
+          "homeTeam": "Philadelphia 76ers",
+          "startTime": "2027-01-12T16:00:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "-105", "home": "-115" },
+          "total": 235.5
+        },
+        {
+          "id": "nba-jazz-bulls",
+          "awayTeam": "Utah Jazz",
+          "homeTeam": "Chicago Bulls",
+          "startTime": "2027-01-12T17:00:00",
+          "spread": { "away": "+4.5", "home": "-4.5" },
+          "moneyline": { "away": "+154", "home": "-185" },
+          "total": 241.5
+        },
+        {
+          "id": "nba-nets-pelicans",
+          "awayTeam": "Brooklyn Nets",
+          "homeTeam": "New Orleans Pelicans",
+          "startTime": "2027-01-12T17:00:00",
+          "spread": { "away": "-1.5", "home": "+1.5" },
+          "moneyline": { "away": "-112", "home": "-108" },
+          "total": 231.5
+        },
+        {
+          "id": "nba-nuggets-mavericks",
+          "awayTeam": "Denver Nuggets",
+          "homeTeam": "Dallas Mavericks",
+          "startTime": "2027-01-12T18:30:00",
+          "spread": { "away": "+2.5", "home": "-2.5" },
+          "moneyline": { "away": "+120", "home": "-142" },
+          "total": 224.5
+        },
+        {
+          "id": "nba-knicks-kings",
+          "awayTeam": "New York Knicks",
+          "homeTeam": "Sacramento Kings",
+          "startTime": "2027-01-12T19:00:00",
+          "spread": { "away": "-10.5", "home": "+10.5" },
+          "moneyline": { "away": "-470", "home": "+360" },
+          "total": 229.5
+        }
+      ]
+    },
+
+    {
+      "id": "nhl-full-slate-2027",
+      "sport": "NHL",
+      "label": "NHL Full Slate Demo Pool",
+      "deadline": "2027-01-11T16:00:00",
+      "status": "open",
+      "games": [
+        {
+          "id": "nhl-canucks-senators",
+          "awayTeam": "Vancouver Canucks",
+          "homeTeam": "Ottawa Senators",
+          "startTime": "2027-01-11T16:00:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "+190", "home": "-230" },
           "total": 6.5
         },
         {
-          "id": "chi-bos",
-          "startTime": "2030-11-18T00:00:00Z",
-          "homeTeam": "Boston Bruins",
-          "awayTeam": "Chicago Blackhawks",
-          "spread": {
-            "home": -1.5,
-            "away": 1.5
-          },
-          "moneyline": {
-            "home": -180,
-            "away": 150
-          },
-          "total": 5.5
-        }
-      ]
-    },
-    {
-      "id": "nba-friday",
-      "sport": "nba",
-      "label": "NBA Friday Night Slate",
-      "status": "open",
-      "deadline": "2026-11-06T00:00:00Z",
-      "games": [
-        {
-          "id": "lal-gsw",
-          "startTime": "2030-11-06T00:00:00Z",
-          "homeTeam": "Golden State Warriors",
-          "awayTeam": "Los Angeles Lakers",
-          "spread": {
-            "home": -4.5,
-            "away": 4.5
-          },
-          "moneyline": {
-            "home": -160,
-            "away": 135
-          },
-          "total": 228.5
+          "id": "nhl-lightning-penguins",
+          "awayTeam": "Tampa Bay Lightning",
+          "homeTeam": "Pittsburgh Penguins",
+          "startTime": "2027-01-11T16:00:00",
+          "spread": { "away": "-1.5", "home": "+1.5" },
+          "moneyline": { "away": "-142", "home": "+120" },
+          "total": 6.5
         },
         {
-          "id": "bos-mia",
-          "startTime": "2030-11-06T01:30:00Z",
-          "homeTeam": "Miami Heat",
-          "awayTeam": "Boston Celtics",
-          "spread": {
-            "home": 1.5,
-            "away": -1.5
-          },
-          "moneyline": {
-            "home": 105,
-            "away": -125
-          },
-          "total": 221.5
+          "id": "nhl-canadiens-capitals",
+          "awayTeam": "Montreal Canadiens",
+          "homeTeam": "Washington Capitals",
+          "startTime": "2027-01-11T16:00:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "+114", "home": "-135" },
+          "total": 6.5
+        },
+        {
+          "id": "nhl-flames-bluejackets",
+          "awayTeam": "Calgary Flames",
+          "homeTeam": "Columbus Blue Jackets",
+          "startTime": "2027-01-11T16:00:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "+114", "home": "-135" },
+          "total": 6.5
+        },
+        {
+          "id": "nhl-redwings-bruins",
+          "awayTeam": "Detroit Red Wings",
+          "homeTeam": "Boston Bruins",
+          "startTime": "2027-01-11T16:30:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "+114", "home": "-135" },
+          "total": 6.5
         }
       ]
     },
+
     {
-      "id": "mlb-sunday",
-      "sport": "mlb",
-      "label": "MLB Sunday Picks",
+      "id": "mlb-full-slate-2027",
+      "sport": "MLB",
+      "label": "MLB Full Slate Demo Pool",
+      "deadline": "2027-03-25T13:00:00",
       "status": "open",
-      "deadline": "2030-11-12T17:00:00Z",
       "games": [
         {
-          "id": "nyy-bos",
-          "startTime": "2030-11-12T17:00:00Z",
-          "homeTeam": "Boston Red Sox",
-          "awayTeam": "New York Yankees",
-          "spread": {
-            "home": -1.5,
-            "away": 1.5
-          },
-          "moneyline": {
-            "home": -115,
-            "away": -105
-          },
+          "id": "mlb-brewers-yankees",
+          "awayTeam": "Milwaukee Brewers",
+          "homeTeam": "New York Yankees",
+          "startTime": "2027-03-25T13:05:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "+120", "home": "-142" },
+          "total": 8.0
+        },
+        {
+          "id": "mlb-orioles-bluejays",
+          "awayTeam": "Baltimore Orioles",
+          "homeTeam": "Toronto Blue Jays",
+          "startTime": "2027-03-25T13:07:00",
+          "spread": { "away": "+1.5", "home": "-1.5" },
+          "moneyline": { "away": "-102", "home": "-118" },
+          "total": 8.5
+        },
+        {
+          "id": "mlb-phillies-nationals",
+          "awayTeam": "Philadelphia Phillies",
+          "homeTeam": "Washington Nationals",
+          "startTime": "2027-03-25T13:05:00",
+          "spread": { "away": "-1.5", "home": "+1.5" },
+          "moneyline": { "away": "-155", "home": "+130" },
+          "total": 8.0
+        },
+        {
+          "id": "mlb-redsox-rangers",
+          "awayTeam": "Boston Red Sox",
+          "homeTeam": "Texas Rangers",
+          "startTime": "2027-03-25T16:05:00",
+          "spread": { "away": "-1.5", "home": "+1.5" },
+          "moneyline": { "away": "-120", "home": "+100" },
           "total": 9.0
         },
         {
-          "id": "lad-sf",
-          "startTime": "2030-11-12T20:00:00Z",
-          "homeTeam": "San Francisco Giants",
-          "awayTeam": "Los Angeles Dodgers",
-          "spread": {
-            "home": 1.5,
-            "away": -1.5
-          },
-          "moneyline": {
-            "home": 140,
-            "away": -160
-          },
-          "total": 8.0
+          "id": "mlb-pirates-marlins",
+          "awayTeam": "Pittsburgh Pirates",
+          "homeTeam": "Miami Marlins",
+          "startTime": "2027-03-25T16:10:00",
+          "spread": { "away": "-1.5", "home": "+1.5" },
+          "moneyline": { "away": "-148", "home": "+124" },
+          "total": 7.5
         }
       ]
     }
   ]
 }
+
+      
