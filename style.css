@@ -361,6 +361,12 @@ body {
   color: var(--dk-accent);
 }
 
+/* NEW: Missing pick error state */
+.odds-btn.missing {
+  border-color: red !important;
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
+}
+
 /* --------------------------------------------------
    FOOTER ACTIONS
 -------------------------------------------------- */
