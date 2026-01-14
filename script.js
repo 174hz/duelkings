@@ -233,6 +233,15 @@ async function loadPools() {
 }
 
 /* --------------------------------------------------
+   MISSING FUNCTION — NOW ADDED
+-------------------------------------------------- */
+
+function setCurrentPool(pool) {
+  currentPool = pool;
+  renderPool(pool);
+}
+
+/* --------------------------------------------------
    POOL SELECTORS
 -------------------------------------------------- */
 
