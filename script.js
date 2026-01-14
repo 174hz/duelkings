@@ -582,4 +582,16 @@ function scoreUserPicks(pool, userEntry, results) {
 
     if (picks.moneyline === evalResult.moneylineWinner) score++;
     if (picks.spread === evalResult.spreadWinner) score++;
-    if (picks
+    if (picks.total === evalResult.totalWinner) score++;
+  }
+
+  return score;
+}
+
+/* --------------------------------------------------
+   LEADERBOARD
+-------------------------------------------------- */
+
+async function loadLeaderboard() {
+  try {
+    const poolsRes = await fetch
