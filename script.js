@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNav();
   setupTestModeToggle();
   loadLocalPicks();
+  showSkeletons();
   loadPools();
   setupSaveButton();
   setupSubmitButton();
@@ -41,6 +42,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeBtn = document.getElementById("theme-toggle");
   if (themeBtn) themeBtn.addEventListener("click", toggleTheme);
 });
+
+/* --------------------------------------------------
+   SKELETON LOADER
+-------------------------------------------------- */
+
+function showSkeletons() {
+  const container = document.getElementById("games-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+  for (let i = 0; i < 3; i++) {
+    const sk = document.createElement("div");
+    sk.className = "skeleton-card";
+    sk.innerHTML = `
+      <div class="skeleton-line" style="width: 40%"></div>
+      <div class="skeleton-line" style="width: 70%"></div>
+      <div class="skeleton-line" style="width: 60%"></div>
+    `;
+    container.appendChild(sk);
+  }
+}
 
 /* --------------------------------------------------
    TEST MODE TOGGLE + DEBUG PANEL
@@ -61,6 +83,7 @@ function setupTestModeToggle() {
       debugPanel.classList.remove("debug-open");
     }
 
+    showSkeletons();
     loadPools();
   });
 }
@@ -233,12 +256,24 @@ async function loadPools() {
 }
 
 /* --------------------------------------------------
-   MISSING FUNCTION — NOW ADDED
+   CURRENT POOL + TRANSITION
 -------------------------------------------------- */
 
 function setCurrentPool(pool) {
-  currentPool = pool;
-  renderPool(pool);
+  const container = document.getElementById("games-container");
+  if (!container) {
+    currentPool = pool;
+    renderPool(pool);
+    return;
+  }
+
+  container.style.opacity = 0;
+
+  setTimeout(() => {
+    currentPool = pool;
+    renderPool(pool);
+    container.style.opacity = 1;
+  }, 150);
 }
 
 /* --------------------------------------------------
@@ -289,7 +324,7 @@ function setupPoolSelectors(selectedPool) {
 }
 
 /* --------------------------------------------------
-   RENDER POOL + MATCHUPS
+   RENDER POOL + MATCHUPS (WITH FLIP)
 -------------------------------------------------- */
 
 function renderPool(pool) {
@@ -305,6 +340,7 @@ function renderPool(pool) {
   gamesContainer.innerHTML = "";
 
   const isOpen = pool.status === "open";
+  const poolResults = allResults[pool.id] || {};
 
   /* STATUS BADGE */
   const badge = document.createElement("div");
@@ -326,7 +362,7 @@ function renderPool(pool) {
 
   gamesContainer.appendChild(badge);
 
-  if (!isOpen && !TEST_MODE) {
+  if (!isOpen && !TEST_MODE && pool.status !== "completed") {
     const lockedMsg = document.createElement("div");
     lockedMsg.className = "matchup-card";
     lockedMsg.textContent = `Pool is ${pool.status}. Picks are locked.`;
@@ -341,8 +377,9 @@ function renderPool(pool) {
     card.dataset.gameId = game.id;
 
     const gamePicks = poolPicks[game.id] || {};
+    const result = poolResults[game.id];
 
-    card.innerHTML = `
+    const frontHtml = `
       <div class="matchup-header">
         <span>${new Date(game.startTime).toLocaleString()}</span>
         <span>${pool.sport}</span>
@@ -390,6 +427,46 @@ function renderPool(pool) {
       </div>
     `;
 
+    const backHtml = result
+      ? `
+        <div>
+          <div class="matchup-header">
+            <span>Final score</span>
+            <span>${pool.sport}</span>
+          </div>
+          <div class="teams">
+            <div class="team">
+              <span class="team-name">${game.awayTeam}</span>
+              <span class="team-tag">${result.awayScore}</span>
+            </div>
+            <div class="team">
+              <span class="team-name">${game.homeTeam}</span>
+              <span class="team-tag">${result.homeScore}</span>
+            </div>
+          </div>
+        </div>
+      `
+      : `
+        <div class="matchup-header">
+          <span>Results pending</span>
+        </div>
+      `;
+
+    card.innerHTML = `
+      <div class="matchup-inner">
+        <div class="matchup-front">
+          ${frontHtml}
+        </div>
+        <div class="matchup-back">
+          ${backHtml}
+        </div>
+      </div>
+    `;
+
+    if (pool.status === "completed") {
+      card.classList.add("completed");
+    }
+
     applyExistingSelections(card, gamePicks);
 
     if (isOpen || TEST_MODE) {
@@ -403,6 +480,7 @@ function renderPool(pool) {
     }
 
     gamesContainer.appendChild(card);
+    requestAnimationFrame(() => card.classList.add("loaded"));
   });
 }
 
@@ -445,12 +523,15 @@ function setupSaveButton() {
   btn.addEventListener("click", () => {
     saveLocalPicks();
     statusEl.textContent = "Picks saved on this device.";
-    setTimeout(() => (statusEl.textContent = ""), 2500);
+    statusEl.classList.add("show");
+    setTimeout(() => {
+      statusEl.classList.remove("show");
+    }, 2500);
   });
 }
 
 /* --------------------------------------------------
-   SUBMIT PICKS → JSON ENTRY GENERATOR
+   SUBMIT PICKS → JSON ENTRY GENERATOR (LOCAL)
 -------------------------------------------------- */
 
 function setupSubmitButton() {
@@ -461,6 +542,7 @@ function setupSubmitButton() {
     const user = localStorage.getItem(USER_KEY);
     if (!user) {
       out.textContent = "You must log in first.";
+      out.classList.add("show");
       return;
     }
 
@@ -469,6 +551,7 @@ function setupSubmitButton() {
 
     if (!picks) {
       out.textContent = "No picks made.";
+      out.classList.add("show");
       return;
     }
 
@@ -480,6 +563,7 @@ function setupSubmitButton() {
     out.textContent =
       "Copy this into data/entries.json:\n\n" +
       JSON.stringify(entry, null, 2);
+    out.classList.add("show");
   });
 }
 
