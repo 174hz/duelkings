@@ -1,18 +1,41 @@
 {
-  "nfl-week1": {
-    "buf-nyj": { "homeScore": 20, "awayScore": 27 },
-    "dal-phi": { "homeScore": 24, "awayScore": 21 }
+  "nfl-week7-2027": {
+    "nfl-w7-bengals-steelers": { "homeScore": null, "awayScore": null },
+    "nfl-w7-rams-jaguars": { "homeScore": null, "awayScore": null },
+    "nfl-w7-patriots-titans": { "homeScore": null, "awayScore": null },
+    "nfl-w7-eagles-vikings": { "homeScore": null, "awayScore": null },
+    "nfl-w7-raiders-chiefs": { "homeScore": null, "awayScore": null },
+    "nfl-w7-panthers-jets": { "homeScore": null, "awayScore": null },
+    "nfl-w7-dolphins-browns": { "homeScore": null, "awayScore": null },
+    "nfl-w7-saints-bears": { "homeScore": null, "awayScore": null },
+    "nfl-w7-giants-broncos": { "homeScore": null, "awayScore": null },
+    "nfl-w7-colts-chargers": { "homeScore": null, "awayScore": null },
+    "nfl-w7-packers-cardinals": { "homeScore": null, "awayScore": null },
+    "nfl-w7-commanders-cowboys": { "homeScore": null, "awayScore": null },
+    "nfl-w7-falcons-49ers": { "homeScore": null, "awayScore": null },
+    "nfl-w7-buccaneers-lions": { "homeScore": null, "awayScore": null },
+    "nfl-w7-texans-seahawks": { "homeScore": null, "awayScore": null }
   },
-  "nhl-saturday": {
-    "tor-mtl": { "homeScore": 3, "awayScore": 4 },
-    "chi-bos": { "homeScore": 2, "awayScore": 5 }
+  "nba-full-slate-2027": {
+    "nba-raptors-pacers": { "homeScore": null, "awayScore": null },
+    "nba-cavaliers-76ers": { "homeScore": null, "awayScore": null },
+    "nba-jazz-bulls": { "homeScore": null, "awayScore": null },
+    "nba-nets-pelicans": { "homeScore": null, "awayScore": null },
+    "nba-nuggets-mavericks": { "homeScore": null, "awayScore": null },
+    "nba-knicks-kings": { "homeScore": null, "awayScore": null }
   },
-  "nba-friday": {
-    "lal-gsw": { "homeScore": 118, "awayScore": 121 },
-    "bos-mia": { "homeScore": 109, "awayScore": 112 }
+  "nhl-full-slate-2027": {
+    "nhl-canucks-senators": { "homeScore": null, "awayScore": null },
+    "nhl-lightning-penguins": { "homeScore": null, "awayScore": null },
+    "nhl-canadiens-capitals": { "homeScore": null, "awayScore": null },
+    "nhl-flames-bluejackets": { "homeScore": null, "awayScore": null },
+    "nhl-redwings-bruins": { "homeScore": null, "awayScore": null }
   },
-  "mlb-sunday": {
-    "nyy-bos": { "homeScore": 5, "awayScore": 6 },
-    "lad-sf": { "homeScore": 3, "awayScore": 2 }
+  "mlb-full-slate-2027": {
+    "mlb-brewers-yankees": { "homeScore": null, "awayScore": null },
+    "mlb-orioles-bluejays": { "homeScore": null, "awayScore": null },
+    "mlb-phillies-nationals": { "homeScore": null, "awayScore": null },
+    "mlb-redsox-rangers": { "homeScore": null, "awayScore": null },
+    "mlb-pirates-marlins": { "homeScore": null, "awayScore": null }
   }
 }
