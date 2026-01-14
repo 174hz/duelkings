@@ -447,9 +447,11 @@ function attachSelectionHandlers(card, poolId, gameId) {
       const choice = btn.dataset.choice;
 
       buttons.forEach(b => {
-        if (b.dataset.type === type) b.classList.remove("selected");
+        if (b.dataset.type === type) b.classList.remove("selected", "missing");
       });
+
       btn.classList.add("selected");
+      btn.classList.remove("missing");
 
       if (!userPicks[poolId]) userPicks[poolId] = {};
       if (!userPicks[poolId][gameId]) userPicks[poolId][gameId] = {};
@@ -477,7 +479,7 @@ function setupSaveButton() {
 }
 
 /* --------------------------------------------------
-   SUBMIT PICKS → JSON ENTRY GENERATOR (LOCAL)
+   SUBMIT PICKS → VALIDATION + JSON OUTPUT
 -------------------------------------------------- */
 
 function setupSubmitButton() {
@@ -494,6 +496,7 @@ function setupSubmitButton() {
 
     const poolId = currentPool.id;
     const picks = userPicks[poolId];
+    const pool = currentPool;
 
     if (!picks) {
       out.textContent = "No picks made.";
@@ -501,10 +504,37 @@ function setupSubmitButton() {
       return;
     }
 
-    const entry = {
-      user,
-      picks
-    };
+    let incompleteGames = [];
+
+    pool.games.forEach(game => {
+      const gameId = game.id;
+      const gamePicks = picks[gameId] || {};
+      const missing = [];
+
+      if (!gamePicks.spread) missing.push("spread");
+      if (!gamePicks.moneyline) missing.push("moneyline");
+      if (!gamePicks.total) missing.push("total");
+
+      if (missing.length > 0) {
+        incompleteGames.push(gameId);
+
+        const card = document.querySelector(`.matchup-card[data-game-id="${gameId}"]`);
+        if (card) {
+          missing.forEach(type => {
+            const btns = card.querySelectorAll(`.odds-btn[data-type="${type}"]`);
+            btns.forEach(b => b.classList.add("missing"));
+          });
+        }
+      }
+    });
+
+    if (incompleteGames.length > 0) {
+      out.textContent = "Please complete all picks before submitting.";
+      out.classList.add("show");
+      return;
+    }
+
+    const entry = { user, picks };
 
     out.textContent =
       "Copy this into data/entries.json:\n\n" +
@@ -552,54 +582,4 @@ function scoreUserPicks(pool, userEntry, results) {
 
     if (picks.moneyline === evalResult.moneylineWinner) score++;
     if (picks.spread === evalResult.spreadWinner) score++;
-    if (picks.total === evalResult.totalWinner) score++;
-  }
-
-  return score;
-}
-
-/* --------------------------------------------------
-   LEADERBOARD
--------------------------------------------------- */
-
-async function loadLeaderboard() {
-  try {
-    const poolsRes = await fetch(POOLS_URL + "?v=" + Date.now());
-    const poolsData = await poolsRes.json();
-    const pool = poolsData.pools.find(p => p.id === poolsData.currentPoolId);
-
-    const resultsRes = await fetch(RESULTS_URL + "?v=" + Date.now());
-    const resultsData = await resultsRes.json();
-    const poolResults = resultsData[pool.id];
-
-    const entriesRes = await fetch(ENTRIES_URL + "?v=" + Date.now());
-    const entriesData = await entriesRes.json();
-    const entries = entriesData[pool.id];
-
-    const leaderboard = entries
-      .map(entry => ({
-        user: entry.user,
-        score: scoreUserPicks(pool, entry, poolResults)
-      }))
-      .sort((a, b) => b.score - a.score);
-
-    renderLeaderboard(leaderboard);
-  } catch (e) {
-    console.error("Leaderboard error", e);
-  }
-}
-
-function renderLeaderboard(rows) {
-  const container = document.getElementById("leaderboard-container");
-  container.innerHTML = "";
-
-  rows.forEach(row => {
-    const div = document.createElement("div");
-    div.className = "leaderboard-row";
-    div.innerHTML = `
-      <span>${row.user}</span>
-      <span>${row.score}</span>
-    `;
-    container.appendChild(div);
-  });
-}
+    if (picks
