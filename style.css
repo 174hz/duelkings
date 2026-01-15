@@ -1,81 +1,94 @@
 /* --------------------------------------------------
-   COMPACT ESPN-STYLE GAME ROW LAYOUT
+   COMPACT ONE-LINE MATCHUP CARD LAYOUT
 -------------------------------------------------- */
 
-.game-row {
+.matchup-card.compact {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
-  padding: 6px 8px;
+  padding: 12px;
   background: var(--dk-surface);
   border: 1px solid var(--dk-border);
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto 12px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-.game-row:hover {
-  background: rgba(0,0,0,0.03);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+.matchup-card.compact.loaded {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.team {
-  font-weight: 600;
+/* Header row (time + matchup) */
+.compact-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--dk-text-muted);
+}
+
+/* Main compact row */
+.compact-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+/* Team labels */
+.team-label {
   font-size: 13px;
+  font-weight: 700;
   min-width: 40px;
-  text-align: left;
-}
-
-.team.home {
-  text-align: right;
+  text-align: center;
 }
 
 /* --------------------------------------------------
-   PILL BUTTONS (SPREAD, ML, TOTAL)
+   ODDS BUTTONS (SPORTSBOOK STYLE)
 -------------------------------------------------- */
 
-.pill {
-  padding: 4px 8px;
-  font-size: 11px;
-  border-radius: 999px;
+.odds-btn {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 8px;
   border: 1px solid var(--dk-border);
-  background: #f9fafb;
+  background: var(--dk-surface);
   cursor: pointer;
-  white-space: nowrap;
   transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
 }
 
-.pill:hover:not(.locked) {
+.odds-btn:hover:not(.locked) {
+  background: rgba(0, 122, 255, 0.08);
   transform: translateY(-1px);
-  background: #eef2ff;
 }
 
-.pill.selected {
-  background: var(--dk-accent-soft);
-  border-color: var(--dk-accent);
-  color: var(--dk-accent);
+/* Strong selected state */
+.odds-btn.selected {
+  background: var(--dk-accent-soft) !important;
+  border-color: var(--dk-accent) !important;
+  color: var(--dk-accent) !important;
   font-weight: 600;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.25);
+  transform: translateY(-1px);
 }
 
-.pill.missing {
+/* Missing pick highlight */
+.odds-btn.missing {
   border-color: red !important;
-  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.35);
 }
 
-.pill.locked {
+/* Locked state */
+.odds-btn.locked {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* --------------------------------------------------
-   FINAL SCORE (COMPLETED POOLS)
--------------------------------------------------- */
-
-.final-score {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--dk-text-muted);
-  font-weight: 600;
 }
 
 /* --------------------------------------------------
@@ -83,23 +96,19 @@
 -------------------------------------------------- */
 
 @media (max-width: 480px) {
-  .game-row {
-    gap: 4px;
-    padding: 4px 6px;
+  .compact-row {
+    gap: 6px;
   }
 
-  .pill {
-    padding: 3px 6px;
-    font-size: 10px;
+  .odds-btn {
+    padding: 5px 8px;
+    font-size: 12px;
   }
 
-  .team {
+  .team-label {
     font-size: 12px;
     min-width: 32px;
   }
-
-  .final-score {
-    font-size: 10px;
-  }
 }
+
 
