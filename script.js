@@ -9,6 +9,62 @@ let userPicks = {};
 let testMode = false;
 
 /* --------------------------------------------------
+   TEAM ABBREVIATIONS (NFL + fallback)
+-------------------------------------------------- */
+
+const TEAM_ABBREVIATIONS = {
+  // AFC East
+  "Buffalo Bills": "BUF",
+  "Miami Dolphins": "MIA",
+  "New England Patriots": "NE",
+  "New York Jets": "NYJ",
+  // AFC North
+  "Baltimore Ravens": "BAL",
+  "Cincinnati Bengals": "CIN",
+  "Cleveland Browns": "CLE",
+  "Pittsburgh Steelers": "PIT",
+  // AFC South
+  "Houston Texans": "HOU",
+  "Indianapolis Colts": "IND",
+  "Jacksonville Jaguars": "JAX",
+  "Tennessee Titans": "TEN",
+  // AFC West
+  "Denver Broncos": "DEN",
+  "Kansas City Chiefs": "KC",
+  "Las Vegas Raiders": "LV",
+  "Los Angeles Chargers": "LAC",
+  // NFC East
+  "Dallas Cowboys": "DAL",
+  "New York Giants": "NYG",
+  "Philadelphia Eagles": "PHI",
+  "Washington Commanders": "WAS",
+  // NFC North
+  "Chicago Bears": "CHI",
+  "Detroit Lions": "DET",
+  "Green Bay Packers": "GB",
+  "Minnesota Vikings": "MIN",
+  // NFC South
+  "Atlanta Falcons": "ATL",
+  "Carolina Panthers": "CAR",
+  "New Orleans Saints": "NO",
+  "Tampa Bay Buccaneers": "TB",
+  // NFC West
+  "Arizona Cardinals": "ARI",
+  "Los Angeles Rams": "LAR",
+  "San Francisco 49ers": "SF",
+  "Seattle Seahawks": "SEA"
+  // You can extend this for NBA/NHL/MLB similarly
+};
+
+function getTeamAbbrev(name) {
+  if (!name) return "";
+  if (TEAM_ABBREVIATIONS[name]) return TEAM_ABBREVIATIONS[name];
+  const cleaned = name.replace(/\s+/g, " ").trim();
+  if (TEAM_ABBREVIATIONS[cleaned]) return TEAM_ABBREVIATIONS[cleaned];
+  return cleaned.substring(0, 3).toUpperCase();
+}
+
+/* --------------------------------------------------
    INIT
 -------------------------------------------------- */
 
@@ -130,7 +186,7 @@ function renderPool(pool) {
 }
 
 /* --------------------------------------------------
-   ULTRA-COMPACT MATCHUP CARD (single row)
+   ULTRA-COMPACT MATCHUP CARD (FIXED COLUMNS)
 -------------------------------------------------- */
 
 function createCompactMatchupCard(game, isOpen) {
@@ -138,22 +194,29 @@ function createCompactMatchupCard(game, isOpen) {
   card.className = "matchup-card compact";
   card.dataset.gameId = game.id;
 
+  const awayAbbr = getTeamAbbrev(game.awayTeam);
+  const homeAbbr = getTeamAbbrev(game.homeTeam);
+
   card.innerHTML = `
-    <div class="matchup-line">
-      <span class="teams">${game.awayTeam} @ ${game.homeTeam}</span>
+    <div class="matchup-row">
+      <div class="col-teams">${awayAbbr} @ ${homeAbbr}</div>
 
-      <button class="odds-btn" data-type="spread" data-side="away">${game.spread.away}</button>
-      <button class="odds-btn" data-type="spread" data-side="home">${game.spread.home}</button>
+      <div class="col-spread">
+        <button class="odds-btn" data-type="spread" data-side="away">${game.spread.away}</button>
+        <button class="odds-btn" data-type="spread" data-side="home">${game.spread.home}</button>
+      </div>
 
-      <span class="sep">| ML</span>
-      <button class="odds-btn" data-type="moneyline" data-side="away">${game.moneyline.away}</button>
-      <button class="odds-btn" data-type="moneyline" data-side="home">${game.moneyline.home}</button>
+      <div class="col-ml">
+        <button class="odds-btn" data-type="moneyline" data-side="away">${game.moneyline.away}</button>
+        <button class="odds-btn" data-type="moneyline" data-side="home">${game.moneyline.home}</button>
+      </div>
 
-      <span class="sep">|</span>
-      <button class="odds-btn" data-type="total" data-side="over">O ${game.total}</button>
-      <button class="odds-btn" data-type="total" data-side="under">U ${game.total}</button>
+      <div class="col-total">
+        <button class="odds-btn" data-type="total" data-side="over">${game.total} O</button>
+        <button class="odds-btn" data-type="total" data-side="under">${game.total} U</button>
+      </div>
     </div>
-  `;
+  """
 
   setTimeout(() => card.classList.add("loaded"), 10);
 
