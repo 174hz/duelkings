@@ -136,27 +136,20 @@ function renderPool(pool) {
 function createCompactMatchupCard(game, isOpen) {
   const card = document.createElement("div");
   card.className = "matchup-card compact";
-  card.dataset.gameId = game.id; // REQUIRED for saved picks
-
-  const start = new Date(game.startTime);
-  const timeStr = start.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  card.dataset.gameId = game.id;
 
   card.innerHTML = `
-    <div class="compact-header">
-      <span>${timeStr}</span>
-      <span>${game.awayTeam} @ ${game.homeTeam}</span>
-    </div>
+    <div class="matchup-line">
+      <span class="teams">${game.awayTeam} @ ${game.homeTeam}</span>
 
-    <div class="compact-row ultra">
-      <span class="team-label">SP</span>
       <button class="odds-btn" data-type="spread" data-side="away">${game.spread.away}</button>
       <button class="odds-btn" data-type="spread" data-side="home">${game.spread.home}</button>
 
-      <span class="team-label">ML</span>
+      <span class="sep">| ML</span>
       <button class="odds-btn" data-type="moneyline" data-side="away">${game.moneyline.away}</button>
       <button class="odds-btn" data-type="moneyline" data-side="home">${game.moneyline.home}</button>
 
-      <span class="team-label">TOT</span>
+      <span class="sep">|</span>
       <button class="odds-btn" data-type="total" data-side="over">O ${game.total}</button>
       <button class="odds-btn" data-type="total" data-side="under">U ${game.total}</button>
     </div>
@@ -176,10 +169,22 @@ function createCompactMatchupCard(game, isOpen) {
       if (!userPicks[game.id]) userPicks[game.id] = {};
       userPicks[game.id][type] = side;
 
+      // Clear same-type selections
       card.querySelectorAll(`.odds-btn[data-type="${type}"]`)
         .forEach(b => b.classList.remove("selected"));
 
       btn.classList.add("selected");
+
+      // AUTO-SELECT MONEYLINE WHEN SPREAD IS PICKED
+      if (type === "spread") {
+        const mlBtn = card.querySelector(`.odds-btn[data-type="moneyline"][data-side="${side}"]`);
+        if (mlBtn) {
+          card.querySelectorAll(`.odds-btn[data-type="moneyline"]`)
+            .forEach(b => b.classList.remove("selected"));
+          mlBtn.classList.add("selected");
+          userPicks[game.id]["moneyline"] = side;
+        }
+      }
     });
   });
 
