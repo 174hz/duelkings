@@ -37,8 +37,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: nowrap;
+  flex-wrap: nowrap;      /* force single line */
   width: 100%;
+  overflow-x: auto;       /* prevent wrapping on small screens */
 }
 
 /* Team labels */
@@ -50,33 +51,31 @@
 }
 
 /* --------------------------------------------------
-   ODDS BUTTONS (SPORTSBOOK STYLE)
+   ODDS BUTTONS — CLEAN PILL STYLE
 -------------------------------------------------- */
 
 .odds-btn {
-  padding: 6px 10px;
+  padding: 6px 14px;
   font-size: 13px;
-  border-radius: 8px;
+  border-radius: 20px; /* pill shape */
   border: 1px solid var(--dk-border);
   background: var(--dk-surface);
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   white-space: nowrap;
 }
 
 .odds-btn:hover:not(.locked) {
-  background: rgba(0, 122, 255, 0.08);
-  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.08);
 }
 
-/* Strong selected state */
+/* Bright green selected pill */
 .odds-btn.selected {
-  background: var(--dk-accent-soft) !important;
-  border-color: var(--dk-accent) !important;
-  color: var(--dk-accent) !important;
+  background: #32d45a !important;
+  border-color: #28b44d !important;
+  color: white !important;
   font-weight: 600;
-  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.25);
-  transform: translateY(-1px);
+  box-shadow: 0 0 0 2px rgba(50, 212, 90, 0.35);
 }
 
 /* Missing pick highlight */
@@ -101,7 +100,7 @@
   }
 
   .odds-btn {
-    padding: 5px 8px;
+    padding: 5px 10px;
     font-size: 12px;
   }
 
@@ -110,5 +109,3 @@
     min-width: 32px;
   }
 }
-
-
