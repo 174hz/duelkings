@@ -130,12 +130,13 @@ function renderPool(pool) {
 }
 
 /* --------------------------------------------------
-   COMPACT MATCHUP CARD
+   ULTRA-COMPACT MATCHUP CARD (single row)
 -------------------------------------------------- */
 
 function createCompactMatchupCard(game, isOpen) {
   const card = document.createElement("div");
   card.className = "matchup-card compact";
+  card.dataset.gameId = game.id; // REQUIRED for saved picks
 
   const start = new Date(game.startTime);
   const timeStr = start.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
@@ -146,20 +147,16 @@ function createCompactMatchupCard(game, isOpen) {
       <span>${game.awayTeam} @ ${game.homeTeam}</span>
     </div>
 
-    <div class="compact-row">
-      <span class="team-label">Spread</span>
+    <div class="compact-row ultra">
+      <span class="team-label">SP</span>
       <button class="odds-btn" data-type="spread" data-side="away">${game.spread.away}</button>
       <button class="odds-btn" data-type="spread" data-side="home">${game.spread.home}</button>
-    </div>
 
-    <div class="compact-row">
       <span class="team-label">ML</span>
       <button class="odds-btn" data-type="moneyline" data-side="away">${game.moneyline.away}</button>
       <button class="odds-btn" data-type="moneyline" data-side="home">${game.moneyline.home}</button>
-    </div>
 
-    <div class="compact-row">
-      <span class="team-label">Total</span>
+      <span class="team-label">TOT</span>
       <button class="odds-btn" data-type="total" data-side="over">O ${game.total}</button>
       <button class="odds-btn" data-type="total" data-side="under">U ${game.total}</button>
     </div>
