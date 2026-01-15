@@ -1,7 +1,3 @@
-/* --------------------------------------------------
-   COMPACT MATCHUP CARD LAYOUT (GRID, STACKABLE)
--------------------------------------------------- */
-
 .matchup-card.compact {
   padding: 8px 12px;
   background: var(--dk-surface);
@@ -21,16 +17,14 @@
   transform: translateY(0);
 }
 
-/* One row per game, fixed-width columns */
 .matchup-row {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.2fr; /* Teams | Spread | ML | Total */
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
   column-gap: 8px;
   align-items: center;
-  width: 100%;
+  padding: 6px 0;
 }
 
-/* Column wrappers */
 .col-teams {
   font-weight: 700;
   font-size: 14px;
@@ -45,18 +39,6 @@
   gap: 6px;
   white-space: nowrap;
 }
-
-/* Optional subtle separators inside columns (if needed) */
-.col-ml::before {
-  content: "ML";
-  font-size: 11px;
-  color: var(--dk-text-muted);
-  margin-right: 4px;
-}
-
-/* --------------------------------------------------
-   ODDS BUTTONS — COMPACT PILL STYLE
--------------------------------------------------- */
 
 .odds-btn {
   padding: 4px 10px;
@@ -73,7 +55,6 @@
   background: rgba(0, 0, 0, 0.08);
 }
 
-/* Bright green selected pill */
 .odds-btn.selected {
   background: #32d45a !important;
   border-color: #28b44d !important;
@@ -82,31 +63,20 @@
   box-shadow: 0 0 0 2px rgba(50, 212, 90, 0.35);
 }
 
-/* Missing pick highlight */
 .odds-btn.missing {
   border-color: red !important;
   box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.35);
 }
 
-/* Locked state */
 .odds-btn.locked {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* --------------------------------------------------
-   RESPONSIVE TUNING (MOBILE)
--------------------------------------------------- */
-
 @media (max-width: 700px) {
-  .matchup-card.compact {
-    padding: 6px 8px;
-    margin-bottom: 6px;
-  }
-
   .matchup-row {
-    grid-template-columns: 1.3fr 0.9fr 0.9fr 1.1fr;
-    column-gap: 4px;
+    grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
+    column-gap: 6px;
   }
 
   .col-teams {
@@ -117,15 +87,11 @@
     padding: 3px 8px;
     font-size: 11px;
   }
-
-  .col-ml::before {
-    font-size: 10px;
-  }
 }
 
 @media (max-width: 480px) {
   .matchup-row {
-    grid-template-columns: 1.2fr 0.9fr 0.9fr 1.1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 
   .col-teams {
@@ -137,4 +103,5 @@
     font-size: 10px;
   }
 }
+
 
