@@ -32,21 +32,21 @@
   color: var(--dk-text-muted);
 }
 
-/* Main compact row */
-.compact-row {
+/* Ultra-compact single-row layout */
+.compact-row.ultra {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: nowrap;      /* force single line */
-  width: 100%;
-  overflow-x: auto;       /* prevent wrapping on small screens */
+  gap: 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 4px 0;
 }
 
-/* Team labels */
-.team-label {
-  font-size: 13px;
+/* SP / ML / TOT labels */
+.compact-row.ultra .team-label {
+  min-width: 28px;
+  font-size: 12px;
   font-weight: 700;
-  min-width: 40px;
   text-align: center;
 }
 
@@ -57,7 +57,7 @@
 .odds-btn {
   padding: 6px 14px;
   font-size: 13px;
-  border-radius: 20px; /* pill shape */
+  border-radius: 20px;
   border: 1px solid var(--dk-border);
   background: var(--dk-surface);
   cursor: pointer;
@@ -95,7 +95,7 @@
 -------------------------------------------------- */
 
 @media (max-width: 480px) {
-  .compact-row {
+  .compact-row.ultra {
     gap: 6px;
   }
 
@@ -104,8 +104,8 @@
     font-size: 12px;
   }
 
-  .team-label {
-    font-size: 12px;
-    min-width: 32px;
+  .compact-row.ultra .team-label {
+    min-width: 24px;
+    font-size: 11px;
   }
 }
