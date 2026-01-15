@@ -1,19 +1,16 @@
 /* --------------------------------------------------
-   COMPACT ONE-LINE MATCHUP CARD LAYOUT
+   COMPACT MATCHUP CARD LAYOUT (GRID, STACKABLE)
 -------------------------------------------------- */
 
 .matchup-card.compact {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px;
+  padding: 8px 12px;
   background: var(--dk-surface);
   border: 1px solid var(--dk-border);
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
   max-width: 900px;
   width: 100%;
-  margin: 0 auto 12px;
+  margin: 0 auto 8px;
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -24,38 +21,45 @@
   transform: translateY(0);
 }
 
-/* --------------------------------------------------
-   SINGLE-LINE MATCHUP ROW
--------------------------------------------------- */
-
-.matchup-line {
-  display: flex;
+/* One row per game, fixed-width columns */
+.matchup-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr; /* Teams | Spread | ML | Total */
+  column-gap: 8px;
   align-items: center;
-  gap: 12px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 6px 0;
+  width: 100%;
+}
+
+/* Column wrappers */
+.col-teams {
+  font-weight: 700;
+  font-size: 14px;
   white-space: nowrap;
 }
 
-.teams {
-  font-weight: 700;
-  font-size: 14px;
-  min-width: 140px;
+.col-spread,
+.col-ml,
+.col-total {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
-.sep {
+/* Optional subtle separators inside columns (if needed) */
+.col-ml::before {
+  content: "ML";
+  font-size: 11px;
   color: var(--dk-text-muted);
-  font-size: 12px;
-  padding: 0 4px;
+  margin-right: 4px;
 }
 
 /* --------------------------------------------------
-   ODDS BUTTONS — CLEAN PILL STYLE
+   ODDS BUTTONS — COMPACT PILL STYLE
 -------------------------------------------------- */
 
 .odds-btn {
-  padding: 6px 14px;
+  padding: 4px 10px;
   font-size: 13px;
   border-radius: 20px;
   border: 1px solid var(--dk-border);
@@ -91,22 +95,46 @@
 }
 
 /* --------------------------------------------------
-   RESPONSIVE TUNING
+   RESPONSIVE TUNING (MOBILE)
 -------------------------------------------------- */
 
-@media (max-width: 480px) {
-  .matchup-line {
-    gap: 8px;
+@media (max-width: 700px) {
+  .matchup-card.compact {
+    padding: 6px 8px;
+    margin-bottom: 6px;
   }
 
-  .odds-btn {
-    padding: 5px 10px;
+  .matchup-row {
+    grid-template-columns: 1.3fr 0.9fr 0.9fr 1.1fr;
+    column-gap: 4px;
+  }
+
+  .col-teams {
     font-size: 12px;
   }
 
-  .teams {
-    min-width: 110px;
-    font-size: 13px;
+  .odds-btn {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .col-ml::before {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .matchup-row {
+    grid-template-columns: 1.2fr 0.9fr 0.9fr 1.1fr;
+  }
+
+  .col-teams {
+    font-size: 11px;
+  }
+
+  .odds-btn {
+    padding: 2px 6px;
+    font-size: 10px;
   }
 }
 
