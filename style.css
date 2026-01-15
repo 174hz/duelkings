@@ -11,7 +11,7 @@
   border: 1px solid var(--dk-border);
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
-  max-width: 720px;
+  max-width: 900px;
   width: 100%;
   margin: 0 auto 12px;
   opacity: 0;
@@ -24,30 +24,30 @@
   transform: translateY(0);
 }
 
-/* Header row (time + matchup) */
-.compact-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--dk-text-muted);
-}
+/* --------------------------------------------------
+   SINGLE-LINE MATCHUP ROW
+-------------------------------------------------- */
 
-/* Ultra-compact single-row layout */
-.compact-row.ultra {
+.matchup-line {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding: 4px 0;
+  padding: 6px 0;
+  white-space: nowrap;
 }
 
-/* SP / ML / TOT labels */
-.compact-row.ultra .team-label {
-  min-width: 28px;
-  font-size: 12px;
+.teams {
   font-weight: 700;
-  text-align: center;
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.sep {
+  color: var(--dk-text-muted);
+  font-size: 12px;
+  padding: 0 4px;
 }
 
 /* --------------------------------------------------
@@ -95,8 +95,8 @@
 -------------------------------------------------- */
 
 @media (max-width: 480px) {
-  .compact-row.ultra {
-    gap: 6px;
+  .matchup-line {
+    gap: 8px;
   }
 
   .odds-btn {
@@ -104,8 +104,9 @@
     font-size: 12px;
   }
 
-  .compact-row.ultra .team-label {
-    min-width: 24px;
-    font-size: 11px;
+  .teams {
+    min-width: 110px;
+    font-size: 13px;
   }
 }
+
