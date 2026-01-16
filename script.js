@@ -7,14 +7,15 @@ const POOLS_FILE = `${DATA_BASE_PATH}/pools.json`;
 const RESULTS_FILE = `${DATA_BASE_PATH}/results.json`;
 const ENTRIES_FILE = `${DATA_BASE_PATH}/entries.json`; // used logically; actual write is backend-dependent
 
-// Toggle this to true to force all pools open (test mode)
-const TEST_MODE = false;
+// Toggle this via UI (Test Mode checkbox)
+let TEST_MODE = false;
 
 // Global state
 let pools = [];
 let results = {};
 let userPicks = {};          // { poolId: { gameId: { spread, moneyline, total } } }
 let currentPool = null;
+let currentPoolId = null;
 let leaderboardData = [];    // computed from entries + results
 
 // ===============================
@@ -106,9 +107,9 @@ function formatDateTime(isoString) {
 
 function isPoolOpen(pool) {
   if (TEST_MODE) return true;
-  if (!pool || !pool.lockTime) return true;
+  if (!pool || !pool.deadline) return true;
   const now = new Date();
-  const lock = new Date(pool.lockTime);
+  const lock = new Date(pool.deadline);
   return now < lock;
 }
 
@@ -131,12 +132,13 @@ function loadLocalPicks() {
 function saveLocalPicks() {
   try {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userPicks));
-    const saveIndicator = $("#save-indicator");
-    if (saveIndicator) {
-      saveIndicator.textContent = "Saved";
-      saveIndicator.classList.add("saved");
+    const saveStatus = $("#save-status");
+    if (saveStatus) {
+      saveStatus.textContent = "Saved";
+      saveStatus.classList.add("saved");
       setTimeout(() => {
-        saveIndicator.classList.remove("saved");
+        saveStatus.textContent = "";
+        saveStatus.classList.remove("saved");
       }, 1500);
     }
   } catch {
@@ -145,26 +147,37 @@ function saveLocalPicks() {
 }
 
 // ===============================
-// DARK MODE
+// DARK MODE (THEME TOGGLE BUTTON)
 // ===============================
 
 function initDarkMode() {
-  const toggle = $("#dark-mode-toggle");
-  if (!toggle) return;
+  const toggleBtn = $("#theme-toggle");
+  if (!toggleBtn) return;
 
   const stored = localStorage.getItem("duelkings_dark_mode");
   if (stored === "true") {
     document.documentElement.classList.add("dark-mode");
-    toggle.checked = true;
   }
 
-  toggle.addEventListener("change", () => {
-    if (toggle.checked) {
-      document.documentElement.classList.add("dark-mode");
-      localStorage.setItem("duelkings_dark_mode", "true");
-    } else {
-      document.documentElement.classList.remove("dark-mode");
-      localStorage.setItem("duelkings_dark_mode", "false");
+  toggleBtn.addEventListener("click", () => {
+    const isDark = document.documentElement.classList.toggle("dark-mode");
+    localStorage.setItem("duelkings_dark_mode", isDark ? "true" : "false");
+  });
+}
+
+// ===============================
+// TEST MODE TOGGLE
+// ===============================
+
+function initTestModeToggle() {
+  const testToggle = $("#test-mode-toggle");
+  if (!testToggle) return;
+
+  testToggle.addEventListener("change", () => {
+    TEST_MODE = testToggle.checked;
+    // Re-render current pool so open/closed state reflects test mode
+    if (currentPool) {
+      renderCurrentPool(currentPool.id);
     }
   });
 }
@@ -266,125 +279,128 @@ function createCompactMatchupCard(poolId, game, isOpen) {
 }
 
 // ===============================
-// POOL RENDERING
+// POOL RENDERING (MATCHES YOUR HTML)
 // ===============================
 
-function renderPoolList() {
-  const container = $("#pool-list");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  if (!pools.length) {
-    container.textContent = "No pools available.";
-    return;
-  }
-
-  pools.forEach(pool => {
-    const isOpen = isPoolOpen(pool);
-    const poolCard = document.createElement("div");
-    poolCard.className = "pool-card";
-    poolCard.dataset.poolId = pool.id;
-
-    poolCard.innerHTML = `
-      <div class="pool-header">
-        <div class="pool-title">${pool.name}</div>
-        <div class="pool-meta">
-          <span class="pool-lock">Locks: ${formatDateTime(pool.lockTime)}</span>
-          <span class="pool-status ${isOpen ? "open" : "closed"}">
-            ${isOpen ? "Open" : "Closed"}
-          </span>
-        </div>
-      </div>
-      <div class="pool-body"></div>
-      <div class="pool-footer">
-        <button class="primary-btn view-pool-btn">View Pool</button>
-      </div>
-    `;
-
-    const viewBtn = poolCard.querySelector(".view-pool-btn");
-    viewBtn.addEventListener("click", () => {
-      openPool(pool.id);
-    });
-
-    container.appendChild(poolCard);
-  });
-}
-
-function openPool(poolId) {
+function renderCurrentPool(poolId) {
   const pool = pools.find(p => p.id === poolId);
   if (!pool) return;
 
   currentPool = pool;
+  currentPoolId = pool.id;
 
-  const poolView = $("#pool-view");
-  const poolTitle = $("#pool-view-title");
-  const poolLock = $("#pool-view-lock");
-  const matchupsContainer = $("#matchups-container");
+  const poolTitleEl = $("#pool-title");
+  const poolMetaEl = $("#pool-meta");
+  const gamesContainer = $("#games-container");
 
-  if (!poolView || !poolTitle || !poolLock || !matchupsContainer) return;
+  if (poolTitleEl) {
+    poolTitleEl.textContent = pool.label || pool.id;
+  }
 
-  poolTitle.textContent = pool.name;
-  poolLock.textContent = `Locks: ${formatDateTime(pool.lockTime)}`;
-  matchupsContainer.innerHTML = "";
+  if (poolMetaEl) {
+    const open = isPoolOpen(pool);
+    poolMetaEl.innerHTML = `
+      <span class="pool-lock">Locks: ${formatDateTime(pool.deadline)}</span>
+      <span class="pool-status ${open ? "open" : "closed"}">${open ? "Open" : "Closed"}</span>
+    `;
+  }
+
+  if (!gamesContainer) return;
+  gamesContainer.innerHTML = "";
 
   const isOpen = isPoolOpen(pool);
 
   (pool.games || []).forEach(game => {
     const card = createCompactMatchupCard(pool.id, game, isOpen);
-    matchupsContainer.appendChild(card);
+    gamesContainer.appendChild(card);
   });
 
   updateMissingPicksHighlight(pool.id);
-
-  poolView.classList.add("visible");
-  const poolListSection = $("#pool-list-section");
-  if (poolListSection) poolListSection.classList.add("hidden");
 }
-
-function closePoolView() {
-  const poolView = $("#pool-view");
-  const poolListSection = $("#pool-list-section");
-  if (poolView) poolView.classList.remove("visible");
-  if (poolListSection) poolListSection.classList.remove("hidden");
-  currentPool = null;
-}
-
-// ===============================
-// MISSING PICKS HIGHLIGHT
-// ===============================
 
 function updateMissingPicksHighlight(poolId) {
   const pool = pools.find(p => p.id === poolId);
   if (!pool) return;
 
   const picksForPool = userPicks[poolId] || {};
-  const matchupsContainer = $("#matchups-container");
-  if (!matchupsContainer) return;
+  const gamesContainer = $("#games-container");
+  if (!gamesContainer) return;
 
-  $all(".matchup-card", matchupsContainer).forEach(card => {
+  $all(".matchup-card", gamesContainer).forEach(card => {
     const gameId = card.dataset.gameId;
     const picksForGame = picksForPool[gameId] || {};
     const hasAnyPick = picksForGame.spread || picksForGame.moneyline || picksForGame.total;
     card.classList.toggle("missing-pick", !hasAnyPick);
   });
+}
 
-  const missingCount = (pool.games || []).filter(g => {
-    const picksForGame = picksForPool[g.id] || {};
-    return !(picksForGame.spread || picksForGame.moneyline || picksForGame.total);
-  }).length;
+// ===============================
+// DROPDOWNS: SPORT FILTER + POOL SELECT
+// ===============================
 
-  const missingIndicator = $("#missing-picks-indicator");
-  if (missingIndicator) {
-    if (missingCount > 0) {
-      missingIndicator.textContent = `${missingCount} picks remaining`;
-      missingIndicator.classList.add("visible");
+function initPoolSelectors() {
+  const sportFilter = $("#sport-filter");
+  const poolSelect = $("#pool-select");
+  if (!sportFilter || !poolSelect) return;
+
+  // Build sport options
+  const sports = Array.from(new Set(pools.map(p => p.sport))).sort();
+  sportFilter.innerHTML = "";
+  const allOption = document.createElement("option");
+  allOption.value = "";
+  allOption.textContent = "All sports";
+  sportFilter.appendChild(allOption);
+
+  sports.forEach(sport => {
+    const opt = document.createElement("option");
+    opt.value = sport;
+    opt.textContent = sport;
+    sportFilter.appendChild(opt);
+  });
+
+  function refreshPoolSelect() {
+    const selectedSport = sportFilter.value;
+    const filteredPools = selectedSport
+      ? pools.filter(p => p.sport === selectedSport)
+      : pools.slice();
+
+    poolSelect.innerHTML = "";
+    filteredPools.forEach(p => {
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = p.label || p.id;
+      poolSelect.appendChild(opt);
+    });
+
+    // Choose current pool
+    let targetId = currentPoolId;
+    if (!targetId || !filteredPools.some(p => p.id === targetId)) {
+      targetId = filteredPools.length ? filteredPools[0].id : null;
+    }
+
+    if (targetId) {
+      poolSelect.value = targetId;
+      renderCurrentPool(targetId);
     } else {
-      missingIndicator.textContent = "All picks made";
-      missingIndicator.classList.add("visible");
-      setTimeout(() => missingIndicator.classList.remove("visible"), 1500);
+      const gamesContainer = $("#games-container");
+      const poolTitleEl = $("#pool-title");
+      const poolMetaEl = $("#pool-meta");
+      if (gamesContainer) gamesContainer.innerHTML = "No pools available.";
+      if (poolTitleEl) poolTitleEl.textContent = "No pool available";
+      if (poolMetaEl) poolMetaEl.textContent = "";
     }
   }
+
+  sportFilter.addEventListener("change", refreshPoolSelect);
+  poolSelect.addEventListener("change", () => {
+    const newId = poolSelect.value;
+    if (newId) {
+      renderCurrentPool(newId);
+    }
+  });
+
+  // Initial population
+  refreshPoolSelect();
 }
 
 // ===============================
@@ -412,7 +428,11 @@ async function submitPicks() {
   };
 
   console.log("Submit payload (frontend placeholder):", payload);
-  alert("Picks submitted (frontend placeholder). In production, this would write to entries.json via backend.");
+  const submitOutput = $("#submit-output");
+  if (submitOutput) {
+    submitOutput.textContent = "Picks submitted (frontend placeholder).";
+    setTimeout(() => (submitOutput.textContent = ""), 2000);
+  }
 }
 
 // ===============================
@@ -444,7 +464,7 @@ function computeScoreForEntry(entry, poolResults) {
 }
 
 function renderLeaderboard() {
-  const leaderboardContainer = $("#leaderboard");
+  const leaderboardContainer = $("#leaderboard-container");
   if (!leaderboardContainer) return;
 
   leaderboardContainer.innerHTML = "";
@@ -494,10 +514,13 @@ async function loadJSON(path) {
 
 async function loadPools() {
   try {
-    pools = await loadJSON(POOLS_FILE);
+    const data = await loadJSON(POOLS_FILE);
+    pools = data.pools || [];
+    currentPoolId = data.currentPoolId || (pools[0] && pools[0].id) || null;
   } catch (e) {
     console.error("Error loading pools:", e);
     pools = [];
+    currentPoolId = null;
   }
 }
 
@@ -515,24 +538,57 @@ async function loadEntriesAndComputeLeaderboard() {
     const entries = await loadJSON(ENTRIES_FILE);
     leaderboardData = [];
 
-    entries.forEach(entry => {
-      const poolId = entry.poolId;
-      const poolResults = results[poolId];
-      if (!poolResults) return;
+    if (Array.isArray(entries)) {
+      entries.forEach(entry => {
+        const poolId = entry.poolId;
+        const poolResults = results[poolId];
+        if (!poolResults) return;
 
-      const score = computeScoreForEntry(entry, poolResults);
-      leaderboardData.push({
-        name: entry.name || "Anonymous",
-        score
+        const score = computeScoreForEntry(entry, poolResults);
+        leaderboardData.push({
+          name: entry.name || "Anonymous",
+          score
+        });
       });
-    });
 
-    leaderboardData.sort((a, b) => b.score - a.score);
+      leaderboardData.sort((a, b) => b.score - a.score);
+    } else {
+      console.warn("entries.json is not an array; skipping leaderboard computation.");
+      leaderboardData = [];
+    }
+
     renderLeaderboard();
   } catch (e) {
     console.warn("No entries yet or failed to load entries.json:", e);
     leaderboardData = [];
+    renderLeaderboard();
   }
+}
+
+// ===============================
+// NAV TABS (POOLS / LEADERBOARD)
+// ===============================
+
+function initNavTabs() {
+  const tabs = $all(".nav-tab");
+  const poolsView = $("#pools-view");
+  const leaderboardView = $("#leaderboard-view");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      const view = tab.dataset.view;
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      if (view === "pools") {
+        if (poolsView) poolsView.classList.add("active");
+        if (leaderboardView) leaderboardView.classList.remove("active");
+      } else if (view === "leaderboard") {
+        if (leaderboardView) leaderboardView.classList.add("active");
+        if (poolsView) poolsView.classList.remove("active");
+      }
+    });
+  });
 }
 
 // ===============================
@@ -540,11 +596,6 @@ async function loadEntriesAndComputeLeaderboard() {
 // ===============================
 
 function initButtons() {
-  const closePoolBtn = $("#close-pool-view");
-  if (closePoolBtn) {
-    closePoolBtn.addEventListener("click", closePoolView);
-  }
-
   const saveBtn = $("#save-picks-btn");
   if (saveBtn) {
     saveBtn.addEventListener("click", () => {
@@ -562,13 +613,24 @@ function initButtons() {
 async function initApp() {
   userPicks = loadLocalPicks();
   initDarkMode();
+  initTestModeToggle();
   initButtons();
+  initNavTabs();
 
   await loadPools();
   await loadResults();
   await loadEntriesAndComputeLeaderboard();
 
-  renderPoolList();
+  if (pools.length) {
+    initPoolSelectors();
+  } else {
+    const gamesContainer = $("#games-container");
+    const poolTitleEl = $("#pool-title");
+    const poolMetaEl = $("#pool-meta");
+    if (gamesContainer) gamesContainer.textContent = "No pools available.";
+    if (poolTitleEl) poolTitleEl.textContent = "No pool available";
+    if (poolMetaEl) poolMetaEl.textContent = "";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
