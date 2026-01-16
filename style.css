@@ -1,15 +1,19 @@
+/* ===============================
+   COMPACT ONE-LINE MATCHUP CARD
+   =============================== */
+
 .matchup-card.compact {
-  padding: 8px 12px;
+  padding: 4px 6px;
   background: var(--dk-surface);
   border: 1px solid var(--dk-border);
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
-  max-width: 900px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
+  max-width: 760px; /* tighter width */
   width: 100%;
-  margin: 0 auto 8px;
+  margin: 0 auto 4px;
   opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateY(3px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .matchup-card.compact.loaded {
@@ -17,33 +21,67 @@
   transform: translateY(0);
 }
 
+/* ===============================
+   ONE-LINE GRID LAYOUT
+   =============================== */
+
 .matchup-row {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-  column-gap: 8px;
+  grid-template-columns: 150px 120px 140px 150px; 
   align-items: center;
-  padding: 6px 0;
+  column-gap: 6px;
+  white-space: nowrap;
+  padding: 2px 0;
+  font-size: 13px;
 }
 
+/* ===============================
+   TEAMS COLUMN
+   =============================== */
+
 .col-teams {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-weight: 700;
-  font-size: 14px;
-  white-space: nowrap;
+  font-size: 13px;
 }
+
+.team-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* ===============================
+   ODDS COLUMNS
+   =============================== */
 
 .col-spread,
 .col-ml,
 .col-total {
   display: flex;
+  align-items: center;
+  gap: 4px;
   justify-content: center;
-  gap: 6px;
   white-space: nowrap;
 }
 
+.ml-label {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-right: 2px;
+}
+
+/* ===============================
+   ODDS BUTTONS (TIGHT)
+   =============================== */
+
 .odds-btn {
-  padding: 4px 10px;
-  font-size: 13px;
-  border-radius: 20px;
+  padding: 2px 6px;
+  font-size: 12px;
+  line-height: 1.1;
+  border-radius: 4px;
   border: 1px solid var(--dk-border);
   background: var(--dk-surface);
   cursor: pointer;
@@ -52,13 +90,13 @@
 }
 
 .odds-btn:hover:not(.locked) {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .odds-btn.selected {
   background: #32d45a !important;
   border-color: #28b44d !important;
-  color: white !important;
+  color: #000 !important;
   font-weight: 600;
   box-shadow: 0 0 0 2px rgba(50, 212, 90, 0.35);
 }
@@ -69,14 +107,19 @@
 }
 
 .odds-btn.locked {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
+/* ===============================
+   RESPONSIVE TUNING
+   =============================== */
+
 @media (max-width: 700px) {
   .matchup-row {
-    grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
-    column-gap: 6px;
+    grid-template-columns: 130px 100px 120px 120px;
+    column-gap: 4px;
+    font-size: 12px;
   }
 
   .col-teams {
@@ -84,14 +127,15 @@
   }
 
   .odds-btn {
-    padding: 3px 8px;
+    padding: 2px 5px;
     font-size: 11px;
   }
 }
 
 @media (max-width: 480px) {
   .matchup-row {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 110px 90px 110px 110px;
+    font-size: 11px;
   }
 
   .col-teams {
@@ -99,9 +143,7 @@
   }
 
   .odds-btn {
-    padding: 2px 6px;
+    padding: 1px 4px;
     font-size: 10px;
   }
 }
-
-
