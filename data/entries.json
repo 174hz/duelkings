@@ -1,6 +1,11 @@
-{
-  "nfl-week7-2027": [],
-  "nba-full-slate-2027": [],
-  "nhl-full-slate-2027": [],
-  "mlb-full-slate-2027": []
-}
+[
+  {
+    "poolId": "nfl-week-1",
+    "name": "Test User",
+    "picks": {
+      "game-1": { "spread": "home", "moneyline": "home", "total": "over" },
+      "game-2": { "spread": "away", "moneyline": "away", "total": "under" }
+    }
+  }
+]
+
